@@ -270,7 +270,7 @@
       <div class="logo-hex">⚔️</div>
       <div class="logo-text">
         <h1>ROBLOX MILITARY</h1>
-        <p>RECRUITMENT DIVISION — CLASSIFIED SYSTEM v3.0</p>
+        <p>RECRUITMENT DIVISION — CLASSIFIED SYSTEM v3.1</p>
       </div>
     </div>
     <div class="header-status">
@@ -308,14 +308,17 @@
       <div class="form-group">
         <label>Roblox Username <span class="req">*</span></label>
         <input type="text" id="robloxUser" placeholder="เช่น xXWarriorXx" maxlength="20">
+        <span class="field-hint">ชื่อตัวละครที่ใช้ในเกม Roblox</span>
       </div>
       <div class="form-group">
-        <label>Roblox User ID <span class="req">*</span></label>
-        <input type="number" id="robloxId" placeholder="เช่น 123456789" min="1">
+        <label>ยศ / ตำแหน่งปัจจุบัน <span class="req">*</span></label>
+        <input type="text" id="robloxRank" placeholder="เช่น Private, Sergeant, Major General">
+        <span class="field-hint">ยศปัจจุบันของคุณในกองทัพหลักหรือค่ายเดิม</span>
       </div>
       <div class="form-group">
         <label>Discord Username <span class="req">*</span></label>
-        <input type="text" id="discordUser" placeholder="เช่น warrior">
+        <input type="text" id="discordUser" placeholder="เช่น warrior หรือ warrior#1234">
+        <span class="field-hint">ชื่อบัญชีดิสคอร์ดสำหรับติดต่อกลับ</span>
       </div>
       <div class="form-group">
         <label>อายุ <span class="req">*</span></label>
@@ -352,7 +355,7 @@
 
       <div class="form-group full">
         <label>เหตุผลที่ต้องการเข้าร่วมหน่วยนี้ <span class="req">*</span></label>
-        <textarea id="reason" rows="4" placeholder="โปรระบุเหตุผล..."></textarea>
+        <textarea id="reason" rows="4" placeholder="โปรระบุเหตุผลและเป้าหมายของคุณ..."></textarea>
       </div>
       <div class="form-group full">
         <label>หน่วยงานเดิมที่เคยสังกัด (ถ้ามี)</label>
@@ -366,7 +369,7 @@
   </div>
 </main>
 
-<footer>MILITARY CONTROL INTERFACE &nbsp;|&nbsp; MULTI-LEVEL AUTH ACTIVE &nbsp;|&nbsp; SECURITY HUB v3.0</footer>
+<footer>MILITARY CONTROL INTERFACE &nbsp;|&nbsp; MULTI-LEVEL AUTH ACTIVE &nbsp;|&nbsp; SECURITY HUB v3.1</footer>
 
 <div id="toast"></div>
 
@@ -449,8 +452,8 @@ const db = firebase.database();
 
 // ตัวแปรแกนหลักของสิทธิ์
 const CREATOR_PASSWORD = "YOKYOK12434278";
-let userCurrentRole = ""; // "creator" หรือ "admin"
-let userCurrentToken = ""; // เก็บรหัสผ่านที่กรอกผ่านเข้ามาเพื่อยิงยืนยันเซิร์ฟเวอร์
+let userCurrentRole = ""; 
+let userCurrentToken = ""; 
 let globalUnits = [];
 let globalAdmins = [];
 let selectedUnitId = null;
@@ -484,11 +487,10 @@ function checkLoginAuth() {
     return;
   }
 
-  // ค้นหาในกล่องข้อมูลแอดมินที่ดึงมาจาก Firebase
   const foundAdmin = globalAdmins.find(a => a.password === inputPw);
   if (foundAdmin) {
     userCurrentRole = "admin";
-    userCurrentToken = "IS_ADMIN"; // ส่งโทเค็นผ่านกฎ Security Rules ทั่วไป
+    userCurrentToken = "IS_ADMIN"; 
     setupAdminTerminal();
   } else {
     showToast('❌ ไม่พบรหัสผ่านในสิทธิ์ผู้สร้างหรือแอดมิน', 'error');
@@ -498,7 +500,6 @@ function checkLoginAuth() {
 
 function setupAdminTerminal() {
   closeModal('adminLoginModal');
-  
   const roleBadge = document.getElementById('roleBadge');
   const creatorPanel = document.getElementById('creatorOnlyPanel');
 
@@ -571,7 +572,7 @@ function deleteAdminByCreator(id) {
     .catch(() => showToast('❌ ปฏิเสธรายการลบสิทธิ์', 'error'));
 }
 
-// ======== จัดการข้อมูลหน่วยงาน (สำหรับทั้ง Creator และ Admin) ========
+// ======== จัดการข้อมูลหน่วยงาน ========
 function renderAdminPanel() {
   const list = document.getElementById('adminUnitList');
   list.innerHTML = '';
@@ -611,7 +612,7 @@ function saveUnit() {
   const targetId = id ? id : db.ref('rmr_data/units').push().key;
 
   updates['/units/' + targetId] = unitData;
-  updates['/auth_token'] = userCurrentToken; // ส่งแนบรหัสพาสเวิร์ดของผู้ส่งปัจจุบันไปตรวจสอบที่คลาวด์
+  updates['/auth_token'] = userCurrentToken;
 
   db.ref('rmr_data').update(updates)
     .then(() => {
@@ -629,7 +630,11 @@ function deleteUnit(id) {
 
   db.ref('rmr_data').update(updates)
     .then(() => {
-      if (selectedUnitId === id) clearForm();
+      if (selectedUnitId === id) {
+        selectedUnitId = null;
+        document.getElementById('selectedUnit').value = '';
+        document.getElementById('selectedWebhook').value = '';
+      }
       showToast('🗑 ลบข้อมูลหน่วยงานออกจากระบบแล้ว', 'success');
     })
     .catch(() => showToast('❌ เกิดปัญหาขัดข้องทางด้านความปลอดภัยในการลบ', 'error'));
@@ -707,48 +712,67 @@ function selectExp(btn, val) {
 
 // ======== ระบบฟอร์มยื่นใบสมัครเข้า Discord Webhook ========
 async function submitApplication() {
-  const robloxUser = document.getElementById('robloxUser').value.trim();
-  const robloxId = document.getElementById('robloxId').value.trim();
+  const robloxUser  = document.getElementById('robloxUser').value.trim();
+  const robloxRank  = document.getElementById('robloxRank').value.trim();
   const discordUser = document.getElementById('discordUser').value.trim();
-  const age = document.getElementById('age').value.trim();
-  const unitName = document.getElementById('selectedUnit').value;
-  const webhook = document.getElementById('selectedWebhook').value;
-  const experience = document.getElementById('experience').value;
-  const reason = document.getElementById('reason').value.trim();
-  const timezone = document.getElementById('timezone').value;
-  const onlineTime = document.getElementById('onlineTime').value.trim();
-  const prevUnit = document.getElementById('prevUnit').value.trim();
+  const age         = document.getElementById('age').value.trim();
+  const unitName    = document.getElementById('selectedUnit').value;
+  const webhook     = document.getElementById('selectedWebhook').value;
+  const experience  = document.getElementById('experience').value;
+  const reason      = document.getElementById('reason').value.trim();
+  const timezone    = document.getElementById('timezone').value;
+  const onlineTime  = document.getElementById('onlineTime').value.trim();
+  const prevUnit    = document.getElementById('prevUnit').value.trim();
 
-  if (!unitName || !robloxUser || !robloxId || !discordUser || !age || !experience || !reason) { showToast('❌ กรุณากรอกข้อมูลที่จำเป็น (*) ให้ครบถ้วน', 'error'); return; }
+  // ตรวจสอบข้อมูลบังคับ (*) ทั้งหมดอย่างละเอียด
+  if (!unitName)    { showToast('❌ กรุณาเลือกหน่วยงานทหารในขั้นตอนที่ 1 ก่อน', 'error'); return; }
+  if (!robloxUser)  { showToast('❌ กรุณากรอกชื่อ Roblox Username', 'error'); return; }
+  if (!robloxRank)  { showToast('❌ กรุณากรอก ยศ/ตำแหน่ง ปัจจุบันของคุณ', 'error'); return; }
+  if (!discordUser) { showToast('❌ กรุณากรอกชื่อ Discord สำหรับใช้ติดต่อกลับ', 'error'); return; }
+  if (!age)         { showToast('❌ กรุณากรอกอายุของคุณ', 'error'); return; }
+  if (!experience)  { showToast('❌ กรุณาเลือกคลิกเลือกระดับประสบการณ์', 'error'); return; }
+  if (!reason)      { showToast('❌ กรุณากรอกเหตุผลที่ต้องการเข้าร่วม', 'error'); return; }
+  if (!webhook)     { showToast('❌ ข้อผิดพลาด: หน่วยงานนี้ไม่ได้เชื่อมต่อ Discord Webhook', 'error'); return; }
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  document.getElementById('submitText').innerHTML = 'กำลังประมวลผล...';
+  document.getElementById('submitText').innerHTML = 'กำลังส่งใบสมัคร... <span class="spinner"></span>';
 
+  const now = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' });
   const embed = {
-    title: '📋 ใบสมัครเข้าร่วมหน่วยงานทหาร (ระบบรวม)',
+    title: '📋 ใบสมัครเข้าร่วมหน่วยงานทหาร (ส่วนกลาง)',
     color: 0x4caf50,
-    description: `**ส่งตรงหาหน่วยงาน: ${unitName}**`,
+    description: `**ยื่นความจำนงค์เข้าสังกัด: ${unitName}**`,
     fields: [
-      { name: '🎮 Roblox User', value: robloxUser, inline: true },
-      { name: '🆔 Roblox ID', value: robloxId, inline: true },
-      { name: '💬 Discord', value: discordUser, inline: true },
-      { name: '🎂 อายุ', value: age + ' ปี', inline: true },
-      { name: '🕐 Timezone', value: timezone || '—', inline: true },
-      { name: '⏰ ออนไลน์', value: onlineTime || '—', inline: true },
-      { name: '⚔️ ประสบการณ์', value: experience, inline: false },
-      { name: '🏛 สังกัดเดิม', value: prevUnit || '— ไม่มี —', inline: false },
-      { name: '📝 เหตุผล', value: reason.substring(0, 1000), inline: false }
+      { name: '🎮 Roblox Username', value: robloxUser, inline: true },
+      { name: '🎖️ ยศ / ตำแหน่งปัจจุบัน', value: robloxRank, inline: true },
+      { name: '💬 Discord Contact', value: discordUser, inline: true },
+      { name: '🎂 อายุผู้สมัคร', value: age + ' ปี', inline: true },
+      { name: '🕐 โซนเวลา (Timezone)', value: timezone || '—', inline: true },
+      { name: '⏰ ช่วงเวลาออนไลน์', value: onlineTime || '—', inline: true },
+      { name: '⚔️ ระดับประสบการณ์', value: experience, inline: false },
+      { name: '🏛 ค่าย/กองทัพเดิมที่เคยสังกัด', value: prevUnit || '— ไม่มีประวัติค่ายเดิม —', inline: false },
+      { name: '📝 เหตุผลและเป้าหมายหลัก', value: reason.substring(0, 1000), inline: false }
     ],
-    footer: { text: `ระบบส่งข้อมูลกลางอัตโนมัติ` }
+    footer: { text: `ระบบส่งข้อมูลสมัครงานอัตโนมัติเมื่อ ${now}` },
+    thumbnail: { url: 'https://tr.rbxcdn.com/53eb9b17fe1432a809c73a13889b5006/420/420/Image/Png' }
   };
 
   try {
-    const res = await fetch(webhook, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: 'Recruitment Agent', embeds: [embed] }) });
-    if (res.ok || res.status === 204) { showToast('✅ ยื่นเอกสารเรียบร้อย! โปรดติดตามผลในดิสคอร์ด', 'success'); clearForm(); }
-    else throw new Error();
+    const res = await fetch(webhook, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' }, 
+      body: JSON.stringify({ username: 'Recruitment Automated Agent', embeds: [embed] }) 
+    });
+    
+    if (res.ok || res.status === 204) { 
+      showToast('✅ ส่งเอกสารเรียบร้อยแล้ว! โปรดรอการตรวจสอบใน Discord', 'success'); 
+      clearForm(); 
+    } else { 
+      throw new Error(); 
+    }
   } catch {
-    showToast('❌ ส่งเอกสารล้มเหลว กรุณาแจ้งผู้รับผิดชอบเรื่องลิงก์ Webhook', 'error');
+    showToast('❌ ส่งเอกสารล้มเหลว กรุณาแจ้งผู้ดูแลระบบให้ตรวจสอบลิงก์ Webhook', 'error');
   } finally {
     btn.disabled = false;
     document.getElementById('submitText').textContent = 'ส่งเอกสารใบสมัคร';
@@ -756,10 +780,15 @@ async function submitApplication() {
 }
 
 function clearForm() {
-  ['robloxUser','robloxId','discordUser','age','reason','onlineTime','prevUnit'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('timezone').value = ''; document.getElementById('experience').value = '';
+  ['robloxUser','robloxRank','discordUser','age','reason','onlineTime','prevUnit'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('timezone').value = ''; 
+  document.getElementById('experience').value = '';
   document.querySelectorAll('.rank-btn').forEach(b => b.classList.remove('active'));
-  selectedUnitId = null; document.getElementById('selectedUnit').value = ''; document.getElementById('selectedWebhook').value = '';
+  selectedUnitId = null; 
+  document.getElementById('selectedUnit').value = ''; 
+  document.getElementById('selectedWebhook').value = '';
   renderUnits();
 }
 
