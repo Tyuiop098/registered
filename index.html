@@ -43,11 +43,7 @@
   body::before {
     content: '';
     position: fixed; inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent, transparent 2px,
-      var(--scan) 2px, var(--scan) 4px
-    );
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, var(--scan) 2px, var(--scan) 4px);
     pointer-events: none;
     z-index: 9999;
   }
@@ -55,9 +51,7 @@
   body::after {
     content: '';
     position: fixed; inset: 0;
-    background-image:
-      linear-gradient(rgba(76,175,80,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(76,175,80,0.04) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(76,175,80,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(76,175,80,0.04) 1px, transparent 1px);
     background-size: 40px 40px;
     pointer-events: none;
     z-index: 0;
@@ -81,11 +75,7 @@
     gap: 1rem;
   }
 
-  .logo-block {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
+  .logo-block { display: flex; align-items: center; gap: 1rem; }
 
   .logo-hex {
     width: 56px; height: 56px;
@@ -118,11 +108,7 @@
     margin-top: 2px;
   }
 
-  .header-status {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-  }
+  .header-status { display: flex; align-items: center; gap: 1.5rem; }
 
   .status-dot {
     display: flex; align-items: center; gap: 0.5rem;
@@ -138,10 +124,7 @@
     animation: blink 1.5s infinite;
   }
 
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.2; }
-  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
   .btn-admin {
     font-family: 'Share Tech Mono', monospace;
@@ -162,516 +145,121 @@
     background: rgba(255,193,7,0.05);
   }
 
-  main {
-    position: relative;
-    z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
+  main { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 2rem; }
 
-  .ticker-wrap {
-    border: 1px solid var(--border);
-    background: var(--panel);
-    overflow: hidden;
-    margin-bottom: 2rem;
-    padding: 0.5rem 0;
-  }
-
-  .ticker {
-    display: flex;
-    gap: 3rem;
-    animation: ticker 30s linear infinite;
-    white-space: nowrap;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--amber);
-  }
-
-  @keyframes ticker {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-
+  .ticker-wrap { border: 1px solid var(--border); background: var(--panel); overflow: hidden; margin-bottom: 2rem; padding: 0.5rem 0; }
+  .ticker { display: flex; gap: 3rem; animation: ticker 30s linear infinite; white-space: nowrap; font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: var(--amber); }
+  @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
   .ticker span { color: var(--green); }
 
-  .section-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 4px;
-    color: var(--text-dim);
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-  }
+  .section-label { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 4px; color: var(--text-dim); margin-bottom: 0.5rem; text-transform: uppercase; }
+  .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 6px; color: var(--text-bright); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-bright), transparent); }
 
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 6px;
-    color: var(--text-bright);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
+  .units-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
 
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--border-bright), transparent);
-  }
-
-  .units-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .unit-card {
-    border: 1px solid var(--border);
-    background: var(--panel);
-    padding: 1.2rem;
-    cursor: pointer;
-    transition: all .2s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .unit-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--green-dim);
-    transform: scaleX(0);
-    transition: transform .3s;
-    transform-origin: left;
-  }
-
-  .unit-card:hover::before,
-  .unit-card.selected::before { transform: scaleX(1); }
-
-  .unit-card:hover {
-    border-color: var(--border-bright);
-    background: #161e16;
-  }
-
-  .unit-card.selected {
-    border-color: var(--green);
-    background: rgba(76,175,80,0.06);
-  }
-
+  .unit-card { border: 1px solid var(--border); background: var(--panel); padding: 1.2rem; cursor: pointer; transition: all .2s; position: relative; overflow: hidden; }
+  .unit-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--green-dim); transform: scaleX(0); transition: transform .3s; transform-origin: left; }
+  .unit-card:hover::before, .unit-card.selected::before { transform: scaleX(1); }
+  .unit-card:hover { border-color: var(--border-bright); background: #161e16; }
+  .unit-card.selected { border-color: var(--green); background: rgba(76,175,80,0.06); }
   .unit-card.selected .unit-name { color: var(--green-bright); }
 
-  .unit-tag {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 3px;
-    color: var(--green);
-    margin-bottom: 0.5rem;
-    display: block;
-  }
+  .unit-tag { font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; letter-spacing: 3px; color: var(--green); margin-bottom: 0.5rem; display: block; }
+  .unit-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 3px; color: var(--text-bright); transition: color .2s; }
+  .unit-desc { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.4rem; line-height: 1.5; }
+  .unit-slots { margin-top: 0.8rem; font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--amber); }
 
-  .unit-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.3rem;
-    letter-spacing: 3px;
-    color: var(--text-bright);
-    transition: color .2s;
-  }
+  .no-units { grid-column: 1/-1; border: 1px dashed var(--border); padding: 3rem; text-align: center; color: var(--text-dim); font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; letter-spacing: 2px; }
 
-  .unit-desc {
-    font-size: 0.78rem;
-    color: var(--text-dim);
-    margin-top: 0.4rem;
-    line-height: 1.5;
-  }
+  .form-panel { border: 1px solid var(--border); background: var(--panel); padding: 2rem; margin-bottom: 2rem; position: relative; }
+  .form-panel::before { content: 'CLASSIFIED DOCUMENT — AUTHORIZED PERSONNEL ONLY'; position: absolute; top: -0.5rem; left: 1.5rem; background: var(--panel); padding: 0 0.5rem; font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; letter-spacing: 2px; color: var(--red); opacity: 0.7; }
 
-  .unit-slots {
-    margin-top: 0.8rem;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--amber);
-  }
-
-  .no-units {
-    grid-column: 1/-1;
-    border: 1px dashed var(--border);
-    padding: 3rem;
-    text-align: center;
-    color: var(--text-dim);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-  }
-
-  .form-panel {
-    border: 1px solid var(--border);
-    background: var(--panel);
-    padding: 2rem;
-    margin-bottom: 2rem;
-    position: relative;
-  }
-
-  .form-panel::before {
-    content: 'CLASSIFIED DOCUMENT — AUTHORIZED PERSONNEL ONLY';
-    position: absolute;
-    top: -0.5rem; left: 1.5rem;
-    background: var(--panel);
-    padding: 0 0.5rem;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    color: var(--red);
-    opacity: 0.7;
-  }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
   .form-group.full { grid-column: 1 / -1; }
 
-  label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-  }
-
+  label { font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; }
   label .req { color: var(--red); margin-left: 2px; }
 
-  input, select, textarea {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    color: var(--text-bright);
-    font-family: 'Sarabun', sans-serif;
-    font-size: 0.9rem;
-    padding: 0.65rem 0.9rem;
-    outline: none;
-    transition: border-color .2s;
-    width: 100%;
-    -webkit-appearance: none;
-  }
+  input, select, textarea { background: var(--bg3); border: 1px solid var(--border); color: var(--text-bright); font-family: 'Sarabun', sans-serif; font-size: 0.9rem; padding: 0.65rem 0.9rem; outline: none; transition: border-color .2s; width: 100%; -webkit-appearance: none; }
+  input:focus, select:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgba(76,175,80,0.1); }
 
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--green);
-    box-shadow: 0 0 0 2px rgba(76,175,80,0.1);
-  }
-
-  select {
-    cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234caf50' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.8rem center;
-    padding-right: 2rem;
-  }
-
+  select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234caf50' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.8rem center; padding-right: 2rem; }
   select option { background: var(--bg3); }
-
   textarea { resize: vertical; min-height: 90px; }
-
   input::placeholder, textarea::placeholder { color: var(--text-dim); opacity: 0.6; }
+  .field-hint { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.15rem; }
 
-  .field-hint {
-    font-size: 0.72rem;
-    color: var(--text-dim);
-    margin-top: 0.15rem;
-  }
-
-  .rank-options {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .rank-btn {
-    border: 1px solid var(--border);
-    background: var(--bg3);
-    color: var(--text-dim);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 1px;
-    padding: 0.4rem 0.8rem;
-    cursor: pointer;
-    transition: all .2s;
-  }
-
+  .rank-options { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .rank-btn { border: 1px solid var(--border); background: var(--bg3); color: var(--text-dim); font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; letter-spacing: 1px; padding: 0.4rem 0.8rem; cursor: pointer; transition: all .2s; }
   .rank-btn:hover { border-color: var(--border-bright); color: var(--text); }
   .rank-btn.active { border-color: var(--green); color: var(--green); background: rgba(76,175,80,0.1); }
 
-  .btn-submit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.8rem;
-    width: 100%;
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background: var(--green-dim);
-    border: 1px solid var(--green);
-    color: #fff;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.2rem;
-    letter-spacing: 5px;
-    cursor: pointer;
-    transition: all .25s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-submit::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-    transform: translateX(-100%);
-    transition: transform .5s;
-  }
-
+  .btn-submit { display: flex; align-items: center; justify-content: center; gap: 0.8rem; width: 100%; margin-top: 1.5rem; padding: 1rem; background: var(--green-dim); border: 1px solid var(--green); color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 5px; cursor: pointer; transition: all .25s; position: relative; overflow: hidden; }
+  .btn-submit::before { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); transform: translateX(-100%); transition: transform .5s; }
   .btn-submit:hover::before { transform: translateX(100%); }
   .btn-submit:hover { background: #388e3c; filter: brightness(1.1); }
   .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  #toast {
-    position: fixed;
-    bottom: 2rem; right: 2rem;
-    padding: 1rem 1.5rem;
-    border: 1px solid;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    z-index: 10000;
-    max-width: 360px;
-    transform: translateY(120%);
-    transition: transform .3s ease;
-  }
-
+  #toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 1.5rem; border: 1px solid; font-family: 'Share Tech Mono', monospace; font-size: 0.8rem; letter-spacing: 1px; z-index: 10000; max-width: 360px; transform: translateY(120%); transition: transform .3s ease; }
   #toast.show { transform: translateY(0); }
   #toast.success { border-color: var(--green); background: rgba(0,30,0,0.95); color: var(--green-bright); }
   #toast.error { border-color: var(--red); background: rgba(30,0,0,0.95); color: #ff7979; }
 
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.85);
-    z-index: 5000;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-  }
-
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 5000; align-items: center; justify-content: center; padding: 1rem; }
   .modal-overlay.open { display: flex; }
+  .modal { background: var(--bg2); border: 1px solid var(--border-bright); padding: 2rem; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; position: relative; }
 
-  .modal {
-    background: var(--bg2);
-    border: 1px solid var(--border-bright);
-    padding: 2rem;
-    width: 100%;
-    max-width: 560px;
-    max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-  }
-
-  .modal-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.5rem;
-    letter-spacing: 4px;
-    color: var(--amber);
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.8rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .modal-close {
-    position: absolute;
-    top: 1rem; right: 1rem;
-    background: none; border: none;
-    color: var(--text-dim); font-size: 1.2rem; cursor: pointer;
-    transition: color .2s;
-  }
-
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 4px; color: var(--amber); margin-bottom: 1.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border); }
+  .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-dim); font-size: 1.2rem; cursor: pointer; transition: color .2s; }
   .modal-close:hover { color: var(--red); }
 
   .admin-unit-list { display: flex; flex-direction: column; gap: 0.8rem; margin: 1rem 0; }
-
-  .admin-unit-item {
-    border: 1px solid var(--border);
-    background: var(--panel);
-    padding: 0.9rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-  }
-
+  .admin-unit-item { border: 1px solid var(--border); background: var(--panel); padding: 0.9rem 1rem; display: flex; align-items: center; gap: 0.8rem; }
   .admin-unit-info { flex: 1; min-width: 0; }
+  .admin-unit-name { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px; color: var(--text-bright); }
+  .admin-unit-webhook { font-family: 'Share Tech Mono', monospace; font-size: 0.62rem; color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  .admin-unit-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1rem;
-    letter-spacing: 2px;
-    color: var(--text-bright);
-  }
-
-  .admin-unit-webhook {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.62rem;
-    color: var(--text-dim);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .btn-icon {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    width: 32px; height: 32px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    font-size: 0.8rem;
-    flex-shrink: 0;
-    transition: all .2s;
-  }
-
+  .btn-icon { background: none; border: 1px solid var(--border); color: var(--text-dim); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; flex-shrink: 0; transition: all .2s; }
   .btn-icon.del:hover { border-color: var(--red); color: var(--red); }
   .btn-icon.edit:hover { border-color: var(--amber); color: var(--amber); }
 
   .add-form { display: flex; flex-direction: column; gap: 0.8rem; }
-
   .add-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
 
-  .btn-add {
-    padding: 0.7rem 1.5rem;
-    background: var(--green-dim);
-    border: 1px solid var(--green);
-    color: #fff;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1rem;
-    letter-spacing: 3px;
-    cursor: pointer;
-    transition: all .2s;
-    align-self: flex-start;
-  }
-
+  .btn-add { padding: 0.7rem 1.5rem; background: var(--green-dim); border: 1px solid var(--green); color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px; cursor: pointer; transition: all .2s; align-self: flex-start; }
   .btn-add:hover { background: #388e3c; }
 
-  .btn-cancel {
-    padding: 0.7rem 1.2rem;
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: all .2s;
-  }
-
+  .btn-cancel { padding: 0.7rem 1.2rem; background: transparent; border: 1px solid var(--border); color: var(--text-dim); font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; letter-spacing: 2px; cursor: pointer; transition: all .2s; }
   .btn-cancel:hover { border-color: var(--text-dim); color: var(--text); }
-
   .form-row-btns { display: flex; gap: 0.8rem; flex-wrap: wrap; }
 
   .pw-form { display: flex; gap: 0.8rem; margin-top: 1rem; }
   .pw-form input { flex: 1; }
 
-  .sep {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 1rem 0;
-  }
+  .sep { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+  .sep-label { display: flex; align-items: center; gap: 0.8rem; margin: 1.5rem 0 1rem; }
+  .sep-label span { font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 3px; color: var(--green); white-space: nowrap; }
+  .sep-label::before, .sep-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 1.5rem 2rem;
-    text-align: center;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--text-dim);
-    letter-spacing: 2px;
-    position: relative;
-    z-index: 1;
-    margin-top: 2rem;
-  }
-
-  .spinner {
-    display: inline-block;
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
-    flex-shrink: 0;
-  }
-
+  footer { border-top: 1px solid var(--border); padding: 1.5rem 2rem; text-align: center; font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 2px; position: relative; z-index: 1; margin-top: 2rem; }
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  @media (max-width: 640px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .form-group.full { grid-column: 1; }
-    .header-status { display: none; }
-    .add-form .row { grid-template-columns: 1fr; }
-  }
-
+  @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } .form-group.full { grid-column: 1; } .header-status { display: none; } .add-form .row { grid-template-columns: 1fr; } }
   .fade-in { animation: fadeIn .3s ease forwards; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  .badge {
-    display: inline-block;
-    padding: 0.15rem 0.5rem;
-    border: 1px solid;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 2px;
-    margin-left: 0.5rem;
-  }
-
+  .badge { display: inline-block; padding: 0.15rem 0.5rem; border: 1px solid; font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; letter-spacing: 2px; margin-left: 0.5rem; }
   .badge.open { border-color: var(--green); color: var(--green); }
   .badge.full { border-color: var(--red); color: var(--red); }
   .badge.limited { border-color: var(--amber); color: var(--amber); }
-
-  .sep-label {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    margin: 1.5rem 0 1rem;
-  }
-
-  .sep-label span {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 3px;
-    color: var(--green);
-    white-space: nowrap;
-  }
-
-  .sep-label::before, .sep-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  .counter-badge {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--green);
-    background: rgba(76,175,80,0.1);
-    border: 1px solid var(--border);
-    padding: 0.2rem 0.6rem;
-    margin-left: 0.5rem;
-  }
+  .counter-badge { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--green); background: rgba(76,175,80,0.1); border: 1px solid var(--border); padding: 0.2rem 0.6rem; margin-left: 0.5rem; }
+  
+  .role-tag { font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; padding: 0.1rem 0.4rem; border: 1px solid; margin-left: 0.5rem; display: inline-block;}
+  .role-tag.creator { border-color: var(--amber); color: var(--amber); }
+  .role-tag.admin { border-color: var(--green-bright); color: var(--green-bright); }
 </style>
 </head>
 <body>
@@ -682,13 +270,13 @@
       <div class="logo-hex">⚔️</div>
       <div class="logo-text">
         <h1>ROBLOX MILITARY</h1>
-        <p>RECRUITMENT DIVISION — CLASSIFIED SYSTEM v2.5</p>
+        <p>RECRUITMENT DIVISION — CLASSIFIED SYSTEM v3.0</p>
       </div>
     </div>
     <div class="header-status">
-      <div class="status-dot"><span class="dot"></span> SECURE NETWORK</div>
+      <div class="status-dot"><span class="dot"></span> CENTRAL NODE</div>
       <div class="status-dot" id="unitCountBadge">UNITS: 0</div>
-      <button class="btn-admin" onclick="openAdminLogin()">⚙ ADMIN</button>
+      <button class="btn-admin" onclick="openAdminLogin()">⚙ SYSTEM LOGIN</button>
     </div>
   </div>
 </header>
@@ -697,23 +285,19 @@
   <div class="ticker-wrap">
     <div class="ticker" id="tickerContent">
       <span>★</span> ระบบรับสมัครสมาชิกเข้าหน่วยทหาร ROBLOX &nbsp;&nbsp;
-      <span>★</span> ข้อมูลซิงก์เรียลไทม์ร่วมกันทุกคน &nbsp;&nbsp;
+      <span>★</span> ข้อมูลเรียลไทม์ควบคู่การตรวจสอบระดับสิทธิ์ &nbsp;&nbsp;
       <span>★</span> ผลการพิจารณาจะแจ้งผ่าน Discord &nbsp;&nbsp;
       <span>★</span> ห้ามสมัครซ้ำหลายหน่วยงาน &nbsp;&nbsp;
-      <span>★</span> FIRESBASE CLOUD SECURITY DATABASE CONNECTED &nbsp;&nbsp;
+      <span>★</span> CREATOR &amp; ADMIN SECURITY ROLE MANAGEMENT SYSTEM ACTIVE &nbsp;&nbsp;
     </div>
   </div>
 </div>
 
 <main>
-
   <div class="section-label">// STEP 1</div>
   <div class="section-title">เลือกหน่วยงาน <span class="counter-badge" id="unitCount">0 หน่วย</span></div>
-
   <div class="units-grid" id="unitsGrid">
-    <div class="no-units" id="noUnitsMsg">
-      ⬡ กำลังโหลดหน่วยงานทหารเรียลไทม์...
-    </div>
+    <div class="no-units" id="noUnitsMsg">⬡ กำลังโหลดหน่วยงานทหารเรียลไทม์...</div>
   </div>
 
   <div class="section-label">// STEP 2</div>
@@ -721,25 +305,18 @@
 
   <div class="form-panel">
     <div class="form-grid">
-
       <div class="form-group">
         <label>Roblox Username <span class="req">*</span></label>
         <input type="text" id="robloxUser" placeholder="เช่น xXWarriorXx" maxlength="20">
-        <span class="field-hint">ชื่อที่ใช้ในเกม Roblox (ห้ามระบุชื่อจริงเด็ดขาด)</span>
       </div>
-
       <div class="form-group">
         <label>Roblox User ID <span class="req">*</span></label>
         <input type="number" id="robloxId" placeholder="เช่น 123456789" min="1">
-        <span class="field-hint">ตัวเลข ID ดูได้จาก Link บนหน้าโปรไฟล์ของคุณ</span>
       </div>
-
       <div class="form-group">
         <label>Discord Username <span class="req">*</span></label>
-        <input type="text" id="discordUser" placeholder="เช่น warrior#1234 หรือ warrior">
-        <span class="field-hint">สำหรับแอดมินใช้ดึงตัวเข้ากลุ่มหรือติดต่อไป</span>
+        <input type="text" id="discordUser" placeholder="เช่น warrior">
       </div>
-
       <div class="form-group">
         <label>อายุ <span class="req">*</span></label>
         <input type="number" id="age" placeholder="เช่น 16" min="1" max="99">
@@ -755,10 +332,8 @@
           <option value="ICT (GMT+7)">ICT (GMT+7) — ไทย</option>
           <option value="SGT (GMT+8)">SGT (GMT+8) — สิงคโปร์</option>
           <option value="JST (GMT+9)">JST (GMT+9) — ญี่ปุ่น</option>
-          <option value="UTC (GMT+0)">UTC (GMT+0)</option>
         </select>
       </div>
-
       <div class="form-group">
         <label>ช่วงเวลาที่สะดวกออนไลน์</label>
         <input type="text" id="onlineTime" placeholder="เช่น 17:00 – 22:00">
@@ -771,48 +346,40 @@
           <button class="rank-btn" onclick="selectExp(this,'มีประสบการณ์น้อย (< 1 ปี)')">น้อยกว่า 1 ปี</button>
           <button class="rank-btn" onclick="selectExp(this,'มีประสบการณ์ปานกลาง (1-2 ปี)')">1–2 ปี</button>
           <button class="rank-btn" onclick="selectExp(this,'มีประสบการณ์มาก (2+ ปี)')">2+ ปี</button>
-          <button class="rank-btn" onclick="selectExp(this,'ผ่านการรบจริงหลายครั้ง')">ผ่านสมรภูมิรบ</button>
         </div>
         <input type="hidden" id="experience">
       </div>
 
       <div class="form-group full">
         <label>เหตุผลที่ต้องการเข้าร่วมหน่วยนี้ <span class="req">*</span></label>
-        <textarea id="reason" rows="4" placeholder="โปรระบุเหตุผลและเป้าหมายของคุณเมื่อได้เข้าหน่วยนี้แล้ว..."></textarea>
+        <textarea id="reason" rows="4" placeholder="โปรระบุเหตุผล..."></textarea>
       </div>
-
       <div class="form-group full">
         <label>หน่วยงานเดิมที่เคยสังกัด (ถ้ามี)</label>
         <input type="text" id="prevUnit" placeholder="ชื่อกองทัพเดิม หรือพิมพ์ — หากไม่มี">
       </div>
-
     </div>
 
     <button class="btn-submit" id="submitBtn" onclick="submitApplication()">
-      <span id="submitText">ส่งเอกสารใบสมัคร</span>
-      <span style="letter-spacing:1px">→</span>
+      <span id="submitText">ส่งเอกสารใบสมัคร</span> →
     </button>
   </div>
-
 </main>
 
-<footer>
-  MILITARY DATABASE MANAGEMENT SYSTEM &nbsp;|&nbsp; CONNECTED TO CLOUD CONFIG &nbsp;|&nbsp; ALL RIGHTS RESERVED
-</footer>
+<footer>MILITARY CONTROL INTERFACE &nbsp;|&nbsp; MULTI-LEVEL AUTH ACTIVE &nbsp;|&nbsp; SECURITY HUB v3.0</footer>
 
 <div id="toast"></div>
 
 <div class="modal-overlay" id="adminLoginModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('adminLoginModal')">✕</button>
-    <div class="modal-title">🔐 ADMIN AUTHENTICATION</div>
+    <div class="modal-title">🔐 ACCESS GATEWAY</div>
     <p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:1rem;">
-      กรุณากรอกรหัสผ่านเพื่อสิทธิ์แอดมินในการ จัดการหน่วยงาน (ซิงก์ข้อมูลไปที่ทุกคน)<br>
-      <span style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--amber);">⚠ ตั้งรหัสผ่านของคุณในตัวแปรโค้ดระบบ หรือตรงกับ Firebase Rules</span>
+      กรอกรหัสผู้สร้างระบบ หรือรหัสแอดมิน เพื่อเข้าใช้งานระบบควบคุมส่วนกลาง
     </p>
     <div class="pw-form">
-      <input type="password" id="adminPwInput" placeholder="กรอกรหัสผ่านแอดมิน" onkeypress="if(event.key==='Enter')checkAdminPw()">
-      <button class="btn-add" onclick="checkAdminPw()">ยืนยัน</button>
+      <input type="password" id="adminPwInput" placeholder="กรอกรหัสผ่านเพื่อสแกนสิทธิ์" onkeypress="if(event.key==='Enter')checkLoginAuth()">
+      <button class="btn-add" onclick="checkLoginAuth()">ยืนยัน</button>
     </div>
   </div>
 </div>
@@ -820,40 +387,34 @@
 <div class="modal-overlay" id="adminModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
-    <div class="modal-title">⚙ CENTRAL CONTROL PANEL</div>
+    <div class="modal-title">⚙ CONTROL TERMINAL <span id="roleBadge"></span></div>
 
-    <div style="display:flex;align-items:center;justify-content:between;margin-bottom:0.8rem;">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:2px;color:var(--text-dim);">รายชื่อหน่วยงานในเซิร์ฟเวอร์หลัก (เรียลไทม์)</div>
+    <div id="creatorOnlyPanel" style="display:none;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;letter-spacing:1px;color:var(--amber);margin-bottom:0.5rem;">👑 CREATOR INTERFACE: จัดการรายชื่อแอดมิน</div>
+      <div class="admin-unit-list" id="creatorAdminList" style="max-height:150px; overflow-y:auto; margin-bottom:1rem;"></div>
+      <div class="add-form" style="background:rgba(255,193,7,0.02); padding:1rem; border:1px solid var(--border); margin-bottom:1.5rem;">
+        <div class="row">
+          <div class="form-group"><label>ชื่อแอดมินใหม่</label><input type="text" id="newAdminName" placeholder="เช่น Admin_A"></div>
+          <div class="form-group"><label>รหัสผ่านแอดมิน</label><input type="text" id="newAdminPassword" placeholder="ตั้งรหัสผ่าน"></div>
+        </div>
+        <button class="btn-add" style="border-color:var(--amber); background:var(--amber-dim); margin-top:0.5rem;" onclick="addAdminByCreator()">➕ เพิ่มรายชื่อแอดมิน</button>
+      </div>
+      <hr class="sep">
     </div>
 
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:2px;color:var(--text-dim);margin-bottom:0.8rem;">รายชื่อหน่วยงานในเซิร์ฟเวอร์หลัก (เรียลไทม์)</div>
     <div class="admin-unit-list" id="adminUnitList"></div>
 
     <div class="sep-label"><span>จัดการและแก้ไขข้อมูลหน่วย</span></div>
-
     <div class="add-form">
       <input type="hidden" id="editUnitId">
       <div class="row">
-        <div class="form-group">
-          <label>ชื่อหน่วยทหาร <span class="req">*</span></label>
-          <input type="text" id="newUnitName" placeholder="เช่น กรมทหารราบที่ 1">
-        </div>
-        <div class="form-group">
-          <label>รหัสย่อ (TAG)</label>
-          <input type="text" id="newUnitTag" placeholder="เช่น INF-01" maxlength="12">
-        </div>
+        <div class="form-group"><label>ชื่อหน่วยทหาร <span class="req">*</span></label><input type="text" id="newUnitName" placeholder="เช่น กรมทหารราบที่ 1"></div>
+        <div class="form-group"><label>รหัสย่อ (TAG)</label><input type="text" id="newUnitTag" placeholder="เช่น INF-01" maxlength="12"></div>
       </div>
-      <div class="form-group">
-        <label>คำอธิบายภารกิจหน่วย</label>
-        <input type="text" id="newUnitDesc" placeholder="เช่น ปฏิบัติการจู่โจมและลาดตระเวนทางอากาศ">
-      </div>
-      <div class="form-group">
-        <label>Discord Webhook URL <span class="req">*</span></label>
-        <input type="url" id="newUnitWebhook" placeholder="https://discord.com/api/webhooks/...">
-      </div>
-      <div class="form-group">
-        <label>อัตราที่เปิดรับสมัคร</label>
-        <input type="text" id="newUnitSlots" placeholder="เช่น รับ 5 นาย หรือ เปิดรับไม่จำกัด">
-      </div>
+      <div class="form-group"><label>คำอธิบายภารกิจหน่วย</label><input type="text" id="newUnitDesc" placeholder="อธิบายสั้นๆ"></div>
+      <div class="form-group"><label>Discord Webhook URL <span class="req">*</span></label><input type="url" id="newUnitWebhook" placeholder="https://discord.com/api/webhooks/..."></div>
+      <div class="form-group"><label>อัตราที่เปิดรับสมัคร</label><input type="text" id="newUnitSlots" placeholder="เช่น รับ 5 นาย"></div>
       <div class="form-group">
         <label>สถานะประตูกองทัพ</label>
         <select id="newUnitStatus">
@@ -883,212 +444,142 @@ const firebaseConfig = {
   measurementId: "G-1YLDWV8L6S"
 };
 
-// เริ่มต้นระบบ Cloud
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ตัวแปรส่วนกลาง
+// ตัวแปรแกนหลักของสิทธิ์
+const CREATOR_PASSWORD = "YOKYOK12434278";
+let userCurrentRole = ""; // "creator" หรือ "admin"
+let userCurrentToken = ""; // เก็บรหัสผ่านที่กรอกผ่านเข้ามาเพื่อยิงยืนยันเซิร์ฟเวอร์
 let globalUnits = [];
+let globalAdmins = [];
 let selectedUnitId = null;
-let currentAdminPassword = ""; 
 
-// รหัสผ่านสำหรับแผงควบคุมหน้าเว็บ (กรุณาตั้งค่าความปลอดภัยให้ตรงกับ Firebase Rules ของคุณ)
-const WEB_ADMIN_PASSWORD = "admin1234";
-
-// ดึงและคอยจับตาดูการอัปเดตข้อมูลแบบ Realtime จาก Firebase 
-db.ref('rmr_data/units').on('value', (snapshot) => {
+// ดึงข้อมูลหน่วยงานแบบเรียลไทม์
+db.ref('rmr_data/units').on('value', snapshot => {
   const data = snapshot.val();
   globalUnits = [];
-  if (data) {
-    Object.keys(data).forEach(key => {
-      globalUnits.push({ id: key, ...data[key] });
-    });
-  }
+  if (data) Object.keys(data).forEach(key => globalUnits.push({ id: key, ...data[key] }));
   renderUnits();
-  if (document.getElementById('adminModal').classList.contains('open')) {
-    renderAdminPanel();
-  }
-}, (error) => {
-  console.error("Firebase fetch failed: ", error);
-  showToast('❌ ไม่สามารถอ่านฐานข้อมูลสำเร็จ กรุณาเช็กสิทธิ์หน้า Rules', 'error');
+  if (document.getElementById('adminModal').classList.contains('open')) renderAdminPanel();
 });
 
-// ========ฟังก์ชันแสดงผลหน่วยงานหน้าแรก (สำหรับทุกคน) ========
-function renderUnits() {
-  const grid  = document.getElementById('unitsGrid');
-  const count = document.getElementById('unitCount');
-  const badge = document.getElementById('unitCountBadge');
+// ดึงข้อมูลรายชื่อแอดมินแบบเรียลไทม์
+db.ref('rmr_data/admins').on('value', snapshot => {
+  const data = snapshot.val();
+  globalAdmins = [];
+  if (data) Object.keys(data).forEach(key => globalAdmins.push({ id: key, ...data[key] }));
+  if (userCurrentRole === "creator") renderCreatorAdminList();
+});
 
-  count.textContent = globalUnits.length + ' หน่วย';
-  badge.textContent = 'UNITS: ' + globalUnits.length;
-  grid.innerHTML = '';
+// ======== ระบบประมวลผลล็อคอินแยกสิทธิ์ ========
+function checkLoginAuth() {
+  const inputPw = document.getElementById('adminPwInput').value.trim();
+  if (!inputPw) { showToast('❌ กรุณากรอกรหัสผ่าน', 'error'); return; }
 
-  if (globalUnits.length === 0) {
-    grid.innerHTML = '<div class="no-units" id="noUnitsMsg">⬡ ขณะนี้ยังไม่มีหน่วยงานใด ๆ ในระบบฐานข้อมูลหลัก</div>';
+  if (inputPw === CREATOR_PASSWORD) {
+    userCurrentRole = "creator";
+    userCurrentToken = CREATOR_PASSWORD;
+    setupAdminTerminal();
     return;
   }
 
-  globalUnits.forEach(unit => {
-    const statusMap = {
-      open:    '<span class="badge open">OPEN</span>',
-      limited: '<span class="badge limited">LIMITED</span>',
-      full:    '<span class="badge full">FULL</span>'
-    };
-
-    const card = document.createElement('div');
-    card.className = 'unit-card fade-in' + (selectedUnitId === unit.id ? ' selected' : '');
-    card.dataset.id = unit.id;
-    card.onclick = () => selectUnit(unit.id);
-
-    card.innerHTML = `
-      <span class="unit-tag">${escHtml(unit.tag || 'MILITARY')}</span>
-      <div class="unit-name">${escHtml(unit.name)} ${statusMap[unit.status] || statusMap.open}</div>
-      ${unit.desc ? `<div class="unit-desc">${escHtml(unit.desc)}</div>` : ''}
-      ${unit.slots ? `<div class="unit-slots">📋 อัตรา: ${escHtml(unit.slots)}</div>` : ''}
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function selectUnit(id) {
-  selectedUnitId = id;
-  const unit = globalUnits.find(u => u.id === id);
-  if (!unit) return;
-
-  if (unit.status === 'full') {
-    showToast('❌ ขออภัย! หน่วยงานนี้ปิดรับสมัครลงทะเบียนแล้ว', 'error');
-    return;
-  }
-
-  document.getElementById('selectedUnit').value   = unit.name;
-  document.getElementById('selectedWebhook').value = unit.webhook;
-
-  document.querySelectorAll('.unit-card').forEach(c => {
-    c.classList.toggle('selected', c.dataset.id === id);
-  });
-
-  showToast('✔ เลือกประจำการชั่วคราว: ' + unit.name, 'success');
-}
-
-function selectExp(btn, val) {
-  document.querySelectorAll('.rank-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('experience').value = val;
-}
-
-// ======== ฟังก์ชันยิงใบสมัครเข้า DISCORD WEBHOOK ========
-async function submitApplication() {
-  const robloxUser  = document.getElementById('robloxUser').value.trim();
-  const robloxId    = document.getElementById('robloxId').value.trim();
-  const discordUser = document.getElementById('discordUser').value.trim();
-  const age         = document.getElementById('age').value.trim();
-  const unitName    = document.getElementById('selectedUnit').value;
-  const webhook     = document.getElementById('selectedWebhook').value;
-  const experience  = document.getElementById('experience').value;
-  const reason      = document.getElementById('reason').value.trim();
-  const timezone    = document.getElementById('timezone').value;
-  const onlineTime  = document.getElementById('onlineTime').value.trim();
-  const prevUnit    = document.getElementById('prevUnit').value.trim();
-
-  if (!unitName)    { showToast('❌ กรุณาเลือกคลิกเลือกหน่วยงานทหารในสเต็ปแรกก่อน', 'error'); return; }
-  if (!robloxUser)  { showToast('❌ กรุณาระบุชื่อบัญชี Roblox (Username)', 'error'); return; }
-  if (!robloxId)    { showToast('❌ กรุณาระบุรหัส Roblox ID', 'error'); return; }
-  if (!discordUser) { showToast('❌ กรุณากรอก Discord ของคุณให้ครบถ้วน', 'error'); return; }
-  if (!age)         { showToast('❌ กรุณาระบุอายุของคุณด้วยตัวเลข', 'error'); return; }
-  if (!experience)  { showToast('❌ กรุณาคลิกเลือกประสบการณ์ทำงานของคุณ', 'error'); return; }
-  if (!reason)      { showToast('❌ กรุณากรอกรายละเอียดเหตุผลที่ต้องการเข้าร่วม', 'error'); return; }
-  if (!webhook)     { showToast('❌ ตรวจพบข้อผิดพลาด: หน่วยงานนี้ไม่มี Webhook เชื่อมไว้', 'error'); return; }
-
-  const btn  = document.getElementById('submitBtn');
-  const text = document.getElementById('submitText');
-  btn.disabled = true;
-  text.innerHTML = 'กำลังประมวลผลคำขอ... <span class="spinner"></span>';
-
-  const now  = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' });
-  const embed = {
-    title: '📋 ใบสมัครเข้าร่วมหน่วยงานทหาร (ส่วนกลาง)',
-    color: 0x4caf50,
-    description: `**มีการส่งใบเสนอตัวสมัครเข้าร่วมสังกัด: ${unitName}**`,
-    fields: [
-      { name: '🎮 Roblox Username',  value: robloxUser,                      inline: true  },
-      { name: '🆔 Roblox User ID',   value: robloxId,                        inline: true  },
-      { name: '💬 Discord Contact',  value: discordUser,                      inline: true  },
-      { name: '🎂 อายุผู้สมัคร',        value: age + ' ปี',                     inline: true  },
-      { name: '🕐 โซนเวลาผู้เล่น',       value: timezone || '—',                  inline: true  },
-      { name: '⏰ ช่วงเวลาออนไลน์',     value: onlineTime || '—',               inline: true  },
-      { name: '⚔️ ระดับประสบการณ์',     value: experience,                       inline: false },
-      { name: '🏛 ค่าย/กองทัพเดิม',     value: prevUnit || '— ไม่เคยมีประวัติ —',  inline: false },
-      { name: '📝 เหตุผลหลักที่สมัคร',   value: reason.substring(0, 1000),       inline: false },
-    ],
-    footer: { text: `ระบบส่งข้อมูลเมื่อ ${now} | SECURE HUB SYSTEM` },
-    thumbnail: { url: 'https://tr.rbxcdn.com/53eb9b17fe1432a809c73a13889b5006/420/420/Image/Png' }
-  };
-
-  try {
-    const res = await fetch(webhook, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: 'Recruitment Automated Server', embeds: [embed] })
-    });
-
-    if (res.ok || res.status === 204) {
-      showToast('✅ ยื่นเอกสารเรียบร้อย! โปรดติดตามความคืบหน้าที่ Discord', 'success');
-      clearForm();
-    } else {
-      throw new Error('สถานะตอบรับ ' + res.status);
-    }
-  } catch (err) {
-    console.error(err);
-    showToast('❌ ส่งใบสมัครไม่สำเร็จ! ตรวจสอบความถูกต้องของลิงก์ Webhook ของหน่วยงาน', 'error');
-  } finally {
-    btn.disabled = false;
-    text.textContent = 'ส่งเอกสารใบสมัคร';
-  }
-}
-
-function clearForm() {
-  ['robloxUser','robloxId','discordUser','age','reason','onlineTime','prevUnit'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('timezone').value = '';
-  document.getElementById('experience').value = '';
-  document.querySelectorAll('.rank-btn').forEach(b => b.classList.remove('active'));
-  selectedUnitId = null;
-  document.getElementById('selectedUnit').value = '';
-  document.getElementById('selectedWebhook').value = '';
-  document.querySelectorAll('.unit-card').forEach(c => c.classList.remove('selected'));
-}
-
-// ======== ส่วนงานของแอดมิน (จัดการเรียลไทม์ผ่าน FIREBASE) ========
-function openAdminLogin() {
-  document.getElementById('adminPwInput').value = '';
-  openModal('adminLoginModal');
-  setTimeout(() => document.getElementById('adminPwInput').focus(), 200);
-}
-
-function checkAdminPw() {
-  const pw = document.getElementById('adminPwInput').value;
-  if (pw === WEB_ADMIN_PASSWORD) {
-    currentAdminPassword = pw; // บันทึกรหัสผ่านไว้ส่งไปพร้อมสิทธิ์เขียนข้อมูล
-    closeModal('adminLoginModal');
-    renderAdminPanel();
-    openModal('adminModal');
+  // ค้นหาในกล่องข้อมูลแอดมินที่ดึงมาจาก Firebase
+  const foundAdmin = globalAdmins.find(a => a.password === inputPw);
+  if (foundAdmin) {
+    userCurrentRole = "admin";
+    userCurrentToken = "IS_ADMIN"; // ส่งโทเค็นผ่านกฎ Security Rules ทั่วไป
+    setupAdminTerminal();
   } else {
-    showToast('❌ รหัสผ่านตรวจสอบระบบไม่ถูกต้อง', 'error');
+    showToast('❌ ไม่พบรหัสผ่านในสิทธิ์ผู้สร้างหรือแอดมิน', 'error');
     document.getElementById('adminPwInput').value = '';
   }
 }
 
-function renderAdminPanel() {
-  const list  = document.getElementById('adminUnitList');
-  list.innerHTML = '';
+function setupAdminTerminal() {
+  closeModal('adminLoginModal');
+  
+  const roleBadge = document.getElementById('roleBadge');
+  const creatorPanel = document.getElementById('creatorOnlyPanel');
 
-  if (globalUnits.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:\'Share Tech Mono\',monospace;font-size:0.75rem;color:var(--text-dim);">ขณะนี้ฐานข้อมูลว่างเปล่า กรุณาเพิ่มข้อมูลใหม่ด้านล่าง</div>';
-    return;
+  if (userCurrentRole === "creator") {
+    roleBadge.className = "role-tag creator";
+    roleBadge.textContent = "👑 CREATOR MODE";
+    creatorPanel.style.display = "block";
+    renderCreatorAdminList();
+  } else {
+    roleBadge.className = "role-tag admin";
+    roleBadge.textContent = "🛡 ADMIN MODE";
+    creatorPanel.style.display = "none";
   }
 
-  globalUnits.forEach((unit) => {
+  renderAdminPanel();
+  openModal('adminModal');
+  showToast('🔓 เข้าสู่ระบบจัดการข้อมูลสำเร็จ', 'success');
+}
+
+// ======== ผู้สร้างระบบ: จัดการรายชื่อแอดมิน ========
+function renderCreatorAdminList() {
+  const list = document.getElementById('creatorAdminList');
+  list.innerHTML = '';
+  if (globalAdmins.length === 0) {
+    list.innerHTML = '<div style="font-size:0.75rem; color:var(--text-dim); text-align:center; padding:0.5rem;">ยังไม่มีแอดมินร่วมระบบ</div>';
+    return;
+  }
+  globalAdmins.forEach(admin => {
+    const div = document.createElement('div');
+    div.className = 'admin-unit-item';
+    div.style.padding = '0.5rem 1rem';
+    div.innerHTML = `
+      <div class="admin-unit-info">
+        <div class="admin-unit-name">👤 ${escHtml(admin.name)}</div>
+        <div class="admin-unit-webhook" style="color:var(--amber);">Key: ${escHtml(admin.password)}</div>
+      </div>
+      <button class="btn-icon del" title="ลบแอดมิน" onclick="deleteAdminByCreator('${admin.id}')">🗑</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function addAdminByCreator() {
+  const name = document.getElementById('newAdminName').value.trim();
+  const password = document.getElementById('newAdminPassword').value.trim();
+  if (!name || !password) { showToast('❌ กรุณากรอกข้อมูลชื่อและรหัสให้ครบถ้วน', 'error'); return; }
+
+  const updates = {};
+  const newKey = db.ref('rmr_data/admins').push().key;
+  updates['/admins/' + newKey] = { name, password };
+  updates['/auth_token'] = userCurrentToken;
+
+  db.ref('rmr_data').update(updates)
+    .then(() => {
+      showToast('✅ บันทึกรายชื่อแอดมินใหม่เข้าเซิร์ฟเวอร์แล้ว', 'success');
+      document.getElementById('newAdminName').value = '';
+      document.getElementById('newAdminPassword').value = '';
+    })
+    .catch(() => showToast('❌ ไม่มีสิทธิ์เขียนข้อมูลความปลอดภัย', 'error'));
+}
+
+function deleteAdminByCreator(id) {
+  if (!confirm('ต้องการลบแอดมินรายนี้ออกจากระบบใช่หรือไม่?')) return;
+  const updates = {};
+  updates['/admins/' + id] = null;
+  updates['/auth_token'] = userCurrentToken;
+
+  db.ref('rmr_data').update(updates)
+    .then(() => showToast('🗑 ลบข้อมูลแอดมินสำเร็จ', 'success'))
+    .catch(() => showToast('❌ ปฏิเสธรายการลบสิทธิ์', 'error'));
+}
+
+// ======== จัดการข้อมูลหน่วยงาน (สำหรับทั้ง Creator และ Admin) ========
+function renderAdminPanel() {
+  const list = document.getElementById('adminUnitList');
+  list.innerHTML = '';
+  if (globalUnits.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:1.5rem;font-size:0.75rem;color:var(--text-dim);">ฐานข้อมูลว่างเปล่า</div>';
+    return;
+  }
+  globalUnits.forEach(unit => {
     const statusLabel = { open: '🟢', limited: '🟡', full: '🔴' }[unit.status] || '🟢';
     const div = document.createElement('div');
     div.className = 'admin-unit-item fade-in';
@@ -1104,136 +595,186 @@ function renderAdminPanel() {
   });
 }
 
-function maskWebhook(url) {
-  if (!url) return '(ไม่พบ Webhook)';
-  if (url.length <= 40) return url;
-  return url.substring(0, 40) + '••••••••••' + url.slice(-8);
+function saveUnit() {
+  const id = document.getElementById('editUnitId').value;
+  const name = document.getElementById('newUnitName').value.trim();
+  const tag = document.getElementById('newUnitTag').value.trim().toUpperCase();
+  const desc = document.getElementById('newUnitDesc').value.trim();
+  const webhook = document.getElementById('newUnitWebhook').value.trim();
+  const slots = document.getElementById('newUnitSlots').value.trim();
+  const status = document.getElementById('newUnitStatus').value;
+
+  if (!name || !webhook) { showToast('❌ โปรดใส่ข้อมูลชื่อและลิงก์ Discord Webhook', 'error'); return; }
+
+  const unitData = { name, tag, desc, webhook, slots, status };
+  const updates = {};
+  const targetId = id ? id : db.ref('rmr_data/units').push().key;
+
+  updates['/units/' + targetId] = unitData;
+  updates['/auth_token'] = userCurrentToken; // ส่งแนบรหัสพาสเวิร์ดของผู้ส่งปัจจุบันไปตรวจสอบที่คลาวด์
+
+  db.ref('rmr_data').update(updates)
+    .then(() => {
+      showToast('✅ ซิงก์อัปเดตข้อมูลทหารบนเซิร์ฟเวอร์สำเร็จ', 'success');
+      clearUnitForm();
+    })
+    .catch(() => showToast('❌ ตรวจสอบเงื่อนไขความปลอดภัยล้มเหลว', 'error'));
 }
 
-// ฟังก์ชันเพิ่มหรือแก้ไขข้อมูล โดยจะส่งพาสเวิร์ดแนบจุดเช็กสิทธิ์ความปลอดภัยไปด้วย
-function saveUnit() {
-  const id      = document.getElementById('editUnitId').value;
-  const name    = document.getElementById('newUnitName').value.trim();
-  const tag     = document.getElementById('newUnitTag').value.trim().toUpperCase();
-  const desc    = document.getElementById('newUnitDesc').value.trim();
-  const webhook = document.getElementById('newUnitWebhook').value.trim();
-  const slots   = document.getElementById('newUnitSlots').value.trim();
-  const status  = document.getElementById('newUnitStatus').value;
+function deleteUnit(id) {
+  if (!confirm('ยืนยันลบหน่วยงานนี้บน Cloud? สำหรับผู้ใช้ทุกคนจะหายไปด้วย')) return;
+  const updates = {};
+  updates['/units/' + id] = null;
+  updates['/auth_token'] = userCurrentToken;
 
-  if (!name)    { showToast('❌ โปรดกรอกข้อมูลชื่อหน่วยงานทหาร', 'error'); return; }
-  if (!webhook) { showToast('❌ โปรดใส่ลิงก์เชื่อมต่อ Discord Webhook URL', 'error'); return; }
-  
-  if (!webhook.startsWith('https://discord.com/api/webhooks/') && !webhook.startsWith('https://discordapp.com/api/webhooks/')) {
-    showToast('⚠ รูปแบบเว็บฮุกของดิสคอร์ดไม่ถูกต้อง', 'error'); return;
-  }
-
-  // เตรียมโครงสร้างข้อมูลแนบข้อมูลหลักร่วมกับรหัสผ่านลับส่งไปตรวจสอบในคราวเดียว
-  const unitData = { name, tag, desc, webhook, slots, status };
-
-  if (id) {
-    // ส่งข้อมูลแบบ Multi-Path Update เพื่อเซ็ตคีย์รักษาความปลอดภัย
-    const updates = {};
-    updates['/units/' + id] = unitData;
-    updates['/admin_auth_key'] = currentAdminPassword; // พ่วงรหัสผ่านสำหรับ Firebase Rules ตรวจสอบ
-
-    db.ref('rmr_data').update(updates)
-      .then(() => {
-        showToast('✅ อัปเดตการแก้ไขซิงก์ข้อมูลสำเร็จ', 'success');
-        clearUnitForm();
-      })
-      .catch((err) => {
-        console.error(err);
-        showToast('❌ ปฏิเสธการเขียน: รหัสแอดมินหรือความปลอดภัย Rules ไม่ถูกต้อง', 'error');
-      });
-  } else {
-    // กรณีสร้างหน่วยงานใหม่
-    const newPostKey = db.ref('rmr_data/units').push().key;
-    const updates = {};
-    updates['/units/' + newPostKey] = unitData;
-    updates['/admin_auth_key'] = currentAdminPassword;
-
-    db.ref('rmr_data').update(updates)
-      .then(() => {
-        showToast('✅ ซิงก์สร้างหน่วยงานใหม่เรียบร้อย', 'success');
-        clearUnitForm();
-      })
-      .catch((err) => {
-        console.error(err);
-        showToast('❌ ปฏิเสธการบันทึก: ตรวจสอบความปลอดภัย Firebase Rules ล้มเหลว', 'error');
-      });
-  }
+  db.ref('rmr_data').update(updates)
+    .then(() => {
+      if (selectedUnitId === id) clearForm();
+      showToast('🗑 ลบข้อมูลหน่วยงานออกจากระบบแล้ว', 'success');
+    })
+    .catch(() => showToast('❌ เกิดปัญหาขัดข้องทางด้านความปลอดภัยในการลบ', 'error'));
 }
 
 function editUnit(id) {
   const unit = globalUnits.find(u => u.id === id);
   if (!unit) return;
-  document.getElementById('editUnitId').value    = unit.id;
-  document.getElementById('newUnitName').value   = unit.name;
-  document.getElementById('newUnitTag').value    = unit.tag || '';
-  document.getElementById('newUnitDesc').value   = unit.desc || '';
+  document.getElementById('editUnitId').value = unit.id;
+  document.getElementById('newUnitName').value = unit.name;
+  document.getElementById('newUnitTag').value = unit.tag || '';
+  document.getElementById('newUnitDesc').value = unit.desc || '';
   document.getElementById('newUnitWebhook').value = unit.webhook;
-  document.getElementById('newUnitSlots').value  = unit.slots || '';
+  document.getElementById('newUnitSlots').value = unit.slots || '';
   document.getElementById('newUnitStatus').value = unit.status || 'open';
-  document.getElementById('newUnitName').scrollIntoView({ behavior: 'smooth' });
   document.getElementById('newUnitName').focus();
 }
 
-// ฟังก์ชันขอลบข้อมูลบน Realtime Database
-function deleteUnit(id) {
-  if (!confirm('ยืนยันลบหน่วยงานนี้หรือไม่? ข้อมูลจะถูกถอดถอนและหายไปทันทีสำหรับผู้ใช้ทุกคน')) return;
-  
-  // ในขั้นตอนลบข้อมูล เราจะยิงรหัสผ่านสิทธิ์ยืนยันตัวตนแอดมินเข้าที่จุดตรวจสอบของโฟลเดอร์รักษาสิทธิ์ก่อนลบ
-  db.ref('rmr_data/admin_auth_key').set(currentAdminPassword)
-    .then(() => {
-      return db.ref('rmr_data/units/' + id).remove();
-    })
-    .then(() => {
-      if (selectedUnitId === id) {
-        selectedUnitId = null;
-        document.getElementById('selectedUnit').value = '';
-        document.getElementById('selectedWebhook').value = '';
-      }
-      showToast('🗑 ลบข้อมูลหน่วยงานออกจากคลาวด์แล้ว', 'success');
-    })
-    .catch((err) => {
-      console.error(err);
-      showToast('❌ ไม่สามารถทำรายการได้เนื่องจากปัญหาสิทธิ์ความปลอดภัย', 'error');
-    });
-}
-
 function clearUnitForm() {
-  document.getElementById('editUnitId').value    = '';
-  document.getElementById('newUnitName').value   = '';
-  document.getElementById('newUnitTag').value    = '';
-  document.getElementById('newUnitDesc').value   = '';
+  document.getElementById('editUnitId').value = '';
+  document.getElementById('newUnitName').value = '';
+  document.getElementById('newUnitTag').value = '';
+  document.getElementById('newUnitDesc').value = '';
   document.getElementById('newUnitWebhook').value = '';
-  document.getElementById('newUnitSlots').value  = '';
+  document.getElementById('newUnitSlots').value = '';
   document.getElementById('newUnitStatus').value = 'open';
 }
 
-// ======== ช่วยเหลือเปิดปิดหน้าต่างโมดอล ========
-function openModal(id)  { document.getElementById(id).classList.add('open'); }
+// ======== หน้าแสดงผลหน่วยงานภายนอก (สำหรับทุกคน) ========
+function renderUnits() {
+  const grid = document.getElementById('unitsGrid');
+  const count = document.getElementById('unitCount');
+  const badge = document.getElementById('unitCountBadge');
+
+  count.textContent = globalUnits.length + ' หน่วย';
+  badge.textContent = 'UNITS: ' + globalUnits.length;
+  grid.innerHTML = '';
+
+  if (globalUnits.length === 0) {
+    grid.innerHTML = '<div class="no-units">⬡ ขณะนี้ไม่มีข้อมูลหน่วยงานเปิดรับสมัคร</div>';
+    return;
+  }
+
+  globalUnits.forEach(unit => {
+    const statusMap = { open: '<span class="badge open">OPEN</span>', limited: '<span class="badge limited">LIMITED</span>', full: '<span class="badge full">FULL</span>' };
+    const card = document.createElement('div');
+    card.className = 'unit-card fade-in' + (selectedUnitId === unit.id ? ' selected' : '');
+    card.onclick = () => selectUnit(unit.id, card);
+    card.innerHTML = `
+      <span class="unit-tag">${escHtml(unit.tag || 'MILITARY')}</span>
+      <div class="unit-name">${escHtml(unit.name)} ${statusMap[unit.status] || statusMap.open}</div>
+      ${unit.desc ? `<div class="unit-desc">${escHtml(unit.desc)}</div>` : ''}
+      ${unit.slots ? `<div class="unit-slots">📋 อัตรา: ${escHtml(unit.slots)}</div>` : ''}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function selectUnit(id, element) {
+  const unit = globalUnits.find(u => u.id === id);
+  if (!unit || unit.status === 'full') { showToast('❌ หน่วยงานนี้ปิดรับสมัครแล้ว', 'error'); return; }
+  selectedUnitId = id;
+  document.getElementById('selectedUnit').value = unit.name;
+  document.getElementById('selectedWebhook').value = unit.webhook;
+  document.querySelectorAll('.unit-card').forEach(c => c.classList.remove('selected'));
+  element.classList.add('selected');
+  showToast('✔ เลือก: ' + unit.name, 'success');
+}
+
+function selectExp(btn, val) {
+  document.querySelectorAll('.rank-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('experience').value = val;
+}
+
+// ======== ระบบฟอร์มยื่นใบสมัครเข้า Discord Webhook ========
+async function submitApplication() {
+  const robloxUser = document.getElementById('robloxUser').value.trim();
+  const robloxId = document.getElementById('robloxId').value.trim();
+  const discordUser = document.getElementById('discordUser').value.trim();
+  const age = document.getElementById('age').value.trim();
+  const unitName = document.getElementById('selectedUnit').value;
+  const webhook = document.getElementById('selectedWebhook').value;
+  const experience = document.getElementById('experience').value;
+  const reason = document.getElementById('reason').value.trim();
+  const timezone = document.getElementById('timezone').value;
+  const onlineTime = document.getElementById('onlineTime').value.trim();
+  const prevUnit = document.getElementById('prevUnit').value.trim();
+
+  if (!unitName || !robloxUser || !robloxId || !discordUser || !age || !experience || !reason) { showToast('❌ กรุณากรอกข้อมูลที่จำเป็น (*) ให้ครบถ้วน', 'error'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  document.getElementById('submitText').innerHTML = 'กำลังประมวลผล...';
+
+  const embed = {
+    title: '📋 ใบสมัครเข้าร่วมหน่วยงานทหาร (ระบบรวม)',
+    color: 0x4caf50,
+    description: `**ส่งตรงหาหน่วยงาน: ${unitName}**`,
+    fields: [
+      { name: '🎮 Roblox User', value: robloxUser, inline: true },
+      { name: '🆔 Roblox ID', value: robloxId, inline: true },
+      { name: '💬 Discord', value: discordUser, inline: true },
+      { name: '🎂 อายุ', value: age + ' ปี', inline: true },
+      { name: '🕐 Timezone', value: timezone || '—', inline: true },
+      { name: '⏰ ออนไลน์', value: onlineTime || '—', inline: true },
+      { name: '⚔️ ประสบการณ์', value: experience, inline: false },
+      { name: '🏛 สังกัดเดิม', value: prevUnit || '— ไม่มี —', inline: false },
+      { name: '📝 เหตุผล', value: reason.substring(0, 1000), inline: false }
+    ],
+    footer: { text: `ระบบส่งข้อมูลกลางอัตโนมัติ` }
+  };
+
+  try {
+    const res = await fetch(webhook, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: 'Recruitment Agent', embeds: [embed] }) });
+    if (res.ok || res.status === 204) { showToast('✅ ยื่นเอกสารเรียบร้อย! โปรดติดตามผลในดิสคอร์ด', 'success'); clearForm(); }
+    else throw new Error();
+  } catch {
+    showToast('❌ ส่งเอกสารล้มเหลว กรุณาแจ้งผู้รับผิดชอบเรื่องลิงก์ Webhook', 'error');
+  } finally {
+    btn.disabled = false;
+    document.getElementById('submitText').textContent = 'ส่งเอกสารใบสมัคร';
+  }
+}
+
+function clearForm() {
+  ['robloxUser','robloxId','discordUser','age','reason','onlineTime','prevUnit'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('timezone').value = ''; document.getElementById('experience').value = '';
+  document.querySelectorAll('.rank-btn').forEach(b => b.classList.remove('active'));
+  selectedUnitId = null; document.getElementById('selectedUnit').value = ''; document.getElementById('selectedWebhook').value = '';
+  renderUnits();
+}
+
+function maskWebhook(url) { if (!url) return '(ไม่มี)'; if (url.length <= 40) return url; return url.substring(0, 35) + '••••••••••' + url.slice(-5); }
+function openAdminLogin() { document.getElementById('adminPwInput').value = ''; openModal('adminLoginModal'); setTimeout(() => document.getElementById('adminPwInput').focus(), 200); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(el => el.addEventListener('click', e => { if (e.target === el) closeModal(el.id); }));
 
-document.querySelectorAll('.modal-overlay').forEach(el => {
-  el.addEventListener('click', e => { if (e.target === el) closeModal(el.id); });
-});
-
-// ======== ระบบ TOAST POPUP ALERT ========
 let toastTimer;
 function showToast(msg, type = 'success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className   = 'show ' + type;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.className = type; }, 4000);
+  const t = document.getElementById('toast'); t.textContent = msg; t.className = 'show ' + type;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.className = type; }, 4000);
 }
-
-// ======== ตัวแปลงความปลอดภัยของตัวอักษร HTML ========
-function escHtml(str) {
-  if (!str) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function escHtml(str) { if (!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>
