@@ -191,6 +191,28 @@
   input::placeholder, textarea::placeholder { color: var(--text-dim); opacity: 0.6; }
   .field-hint { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.15rem; }
 
+  /* ระบบอัปโหลดรูปภาพแนวไซเบอร์ */
+  .file-upload-box {
+    border: 1px dashed var(--border-bright);
+    background: var(--bg3);
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .file-upload-box:hover {
+    border-color: var(--green);
+    background: rgba(76,175,80,0.03);
+  }
+  .file-upload-box input[type="file"] {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+  }
+  .upload-preview {
+    max-width: 100%; max-height: 180px; margin-top: 0.8rem; display: none; border: 1px solid var(--border);
+  }
+  .upload-text { font-family: 'Share Tech Mono', monospace; font-size: 0.75rem; color: var(--text-dim); }
+
   .rank-options { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   .rank-btn { border: 1px solid var(--border); background: var(--bg3); color: var(--text-dim); font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; letter-spacing: 1px; padding: 0.4rem 0.8rem; cursor: pointer; transition: all .2s; }
   .rank-btn:hover { border-color: var(--border-bright); color: var(--text); }
@@ -270,7 +292,7 @@
       <div class="logo-hex">⚔️</div>
       <div class="logo-text">
         <h1>ROBLOX MILITARY</h1>
-        <p>RECRUITMENT DIVISION — CLASSIFIED SYSTEM v3.1</p>
+        <p>RECRUITMENT DIVISION — CLASSIFIED SYSTEM v3.2</p>
       </div>
     </div>
     <div class="header-status">
@@ -288,7 +310,7 @@
       <span>★</span> ข้อมูลเรียลไทม์ควบคู่การตรวจสอบระดับสิทธิ์ &nbsp;&nbsp;
       <span>★</span> ผลการพิจารณาจะแจ้งผ่าน Discord &nbsp;&nbsp;
       <span>★</span> ห้ามสมัครซ้ำหลายหน่วยงาน &nbsp;&nbsp;
-      <span>★</span> CREATOR &amp; ADMIN SECURITY ROLE MANAGEMENT SYSTEM ACTIVE &nbsp;&nbsp;
+      <span>★</span> PHOTO UPLOAD VERIFICATION INTERFACE MODULE ACTIVE &nbsp;&nbsp;
     </div>
   </div>
 </div>
@@ -343,6 +365,16 @@
       </div>
 
       <div class="form-group full">
+        <label>รูปภาพหลักฐาน / หน้าต่างโปรไฟล์ตัวละคร <span class="req">*</span></label>
+        <div class="file-upload-box">
+          <span class="upload-text" id="uploadStatusText">⬡ คลิกที่นี่เพื่อเลือกอัปโหลดรูปภาพประวัติ/ยศ (PNG, JPG)</span>
+          <input type="file" id="imageFile" accept="image/*" onchange="previewSelectedImage(this)">
+          <center><img id="imagePreview" class="upload-preview" src=""></center>
+        </div>
+        <span class="field-hint" style="color:var(--amber);">* จำเป็นต้องแนบ เพื่อให้แอดมินใน Discord ตรวจสอบระดับประวัติของคุณ</span>
+      </div>
+
+      <div class="form-group full">
         <label>ประสบการณ์ทหาร ROBLOX <span class="req">*</span></label>
         <div class="rank-options" id="expOptions">
           <button class="rank-btn" onclick="selectExp(this,'ไม่มีประสบการณ์')">ไม่มีประสบการณ์</button>
@@ -369,7 +401,7 @@
   </div>
 </main>
 
-<footer>MILITARY CONTROL INTERFACE &nbsp;|&nbsp; MULTI-LEVEL AUTH ACTIVE &nbsp;|&nbsp; SECURITY HUB v3.1</footer>
+<footer>MILITARY CONTROL INTERFACE &nbsp;|&nbsp; MULTI-LEVEL AUTH ACTIVE &nbsp;|&nbsp; SECURITY HUB v3.2</footer>
 
 <div id="toast"></div>
 
@@ -435,7 +467,7 @@
 </div>
 
 <script>
-// ======== สัญญาณเชื่อมต่อฐานข้อมูล FIREBASE CONFIG ========
+// ======== ฐานข้อมูล FIREBASE CONFIG ========
 const firebaseConfig = {
   apiKey: "AIzaSyD8cZVvAvmUmpXIsWvcx6bwfZy_L7p4f3M",
   authDomain: "registered-4b7de.firebaseapp.com",
@@ -450,13 +482,13 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ตัวแปรแกนหลักของสิทธิ์
 const CREATOR_PASSWORD = "YOKYOK12434278";
 let userCurrentRole = ""; 
 let userCurrentToken = ""; 
 let globalUnits = [];
 let globalAdmins = [];
 let selectedUnitId = null;
+let base64ImageData = ""; // ตัวแปรเก็บค่าฐานข้อมูลของรูปภาพที่แปลงแล้ว
 
 // ดึงข้อมูลหน่วยงานแบบเรียลไทม์
 db.ref('rmr_data/units').on('value', snapshot => {
@@ -710,6 +742,37 @@ function selectExp(btn, val) {
   document.getElementById('experience').value = val;
 }
 
+// ======== ระบบประมวลผลอ่านไฟล์รูปภาพที่ผู้ใช้เลือก ========
+function previewSelectedImage(input) {
+  const file = input.files[0];
+  const textLabel = document.getElementById('uploadStatusText');
+  const preview = document.getElementById('imagePreview');
+
+  if (file) {
+    // จำกัดขนาดไฟล์รูปภาพไม่ให้ใหญ่เกิน 2MB เพื่อให้สามารถส่งข้ามระบบ Webhook ได้รวดเร็ว
+    if (file.size > 2 * 1024 * 1024) {
+      showToast('❌ ขนาดไฟล์รูปภาพใหญ่เกิน 2MB กรุณาใช้รูปอื่น', 'error');
+      input.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      base64ImageData = e.target.result; // แปลงรูปเป็น Data URL
+      preview.src = base64ImageData;
+      preview.style.display = 'block';
+      textLabel.textContent = `✅ เลือกรูปภาพสำเร็จ: ${file.name}`;
+      showToast('📸 แนบไฟล์หลักฐานสำเร็จ', 'success');
+    }
+    reader.readAsDataURL(file);
+  } else {
+    base64ImageData = "";
+    preview.style.display = 'none';
+    preview.src = "";
+    textLabel.textContent = '⬡ คลิกที่นี่เพื่อเลือกอัปโหลดรูปภาพประวัติ/ยศ (PNG, JPG)';
+  }
+}
+
 // ======== ระบบฟอร์มยื่นใบสมัครเข้า Discord Webhook ========
 async function submitApplication() {
   const robloxUser  = document.getElementById('robloxUser').value.trim();
@@ -724,23 +787,27 @@ async function submitApplication() {
   const onlineTime  = document.getElementById('onlineTime').value.trim();
   const prevUnit    = document.getElementById('prevUnit').value.trim();
 
-  // ตรวจสอบข้อมูลบังคับ (*) ทั้งหมดอย่างละเอียด
+  // ตรวจสอบข้อมูลบังคับรวมทั้งรูปภาพ
   if (!unitName)    { showToast('❌ กรุณาเลือกหน่วยงานทหารในขั้นตอนที่ 1 ก่อน', 'error'); return; }
   if (!robloxUser)  { showToast('❌ กรุณากรอกชื่อ Roblox Username', 'error'); return; }
   if (!robloxRank)  { showToast('❌ กรุณากรอก ยศ/ตำแหน่ง ปัจจุบันของคุณ', 'error'); return; }
   if (!discordUser) { showToast('❌ กรุณากรอกชื่อ Discord สำหรับใช้ติดต่อกลับ', 'error'); return; }
   if (!age)         { showToast('❌ กรุณากรอกอายุของคุณ', 'error'); return; }
+  if (!base64ImageData) { showToast('❌ กรุณาอัปโหลดรูปภาพหลักฐานประกอบใบสมัคร', 'error'); return; }
   if (!experience)  { showToast('❌ กรุณาเลือกคลิกเลือกระดับประสบการณ์', 'error'); return; }
   if (!reason)      { showToast('❌ กรุณากรอกเหตุผลที่ต้องการเข้าร่วม', 'error'); return; }
   if (!webhook)     { showToast('❌ ข้อผิดพลาด: หน่วยงานนี้ไม่ได้เชื่อมต่อ Discord Webhook', 'error'); return; }
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  document.getElementById('submitText').innerHTML = 'กำลังส่งใบสมัคร... <span class="spinner"></span>';
+  document.getElementById('submitText').innerHTML = 'กำลังประมวลผลไฟล์และส่งใบสมัคร... <span class="spinner"></span>';
 
+  // แปลงรูปภาพ Base64 เพื่อแนบเป็นก้อนไฟล์รูปภาพหลักส่งเข้าไปใน Discord Webhook
+  let formData = new FormData();
   const now = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' });
+
   const embed = {
-    title: '📋 ใบสมัครเข้าร่วมหน่วยงานทหาร (ส่วนกลาง)',
+    title: '📋 ใบสมัครเข้าร่วมหน่วยงานทหาร (พร้อมหลักฐานรูปถ่าย)',
     color: 0x4caf50,
     description: `**ยื่นความจำนงค์เข้าสังกัด: ${unitName}**`,
     fields: [
@@ -755,18 +822,24 @@ async function submitApplication() {
       { name: '📝 เหตุผลและเป้าหมายหลัก', value: reason.substring(0, 1000), inline: false }
     ],
     footer: { text: `ระบบส่งข้อมูลสมัครงานอัตโนมัติเมื่อ ${now}` },
-    thumbnail: { url: 'https://tr.rbxcdn.com/53eb9b17fe1432a809c73a13889b5006/420/420/Image/Png' }
+    image: { url: 'attachment://evidence.png' } // สั่งให้ดึงรูปภาพจากไฟล์แนบมาโชว์ตัวใหญ่ใน Embed
   };
 
+  // ดึงค่า blob รูปภาพจากข้อมูลที่บันทึกไว้ในระบบ
   try {
-    const res = await fetch(webhook, { 
-      method: 'POST', 
-      headers: { 'Content-Type': 'application/json' }, 
-      body: JSON.stringify({ username: 'Recruitment Automated Agent', embeds: [embed] }) 
-    });
+    const responseAudio = await fetch(base64ImageData);
+    const blob = await responseAudio.blob();
+    
+    formData.append('files[0]', blob, 'evidence.png');
+    formData.append('payload_json', JSON.stringify({
+      username: 'Recruitment Automated Agent',
+      embeds: [embed]
+    }));
+
+    const res = await fetch(webhook, { method: 'POST', body: formData });
     
     if (res.ok || res.status === 204) { 
-      showToast('✅ ส่งเอกสารเรียบร้อยแล้ว! โปรดรอการตรวจสอบใน Discord', 'success'); 
+      showToast('✅ ส่งเอกสารและรูปภาพเรียบร้อย! โปรดรอตรวจสอบใน Discord', 'success'); 
       clearForm(); 
     } else { 
       throw new Error(); 
@@ -780,12 +853,19 @@ async function submitApplication() {
 }
 
 function clearForm() {
-  ['robloxUser','robloxRank','discordUser','age','reason','onlineTime','prevUnit'].forEach(id => {
+  ['robloxUser','robloxRank','discordUser','age','reason','onlineTime','prevUnit','imageFile'].forEach(id => {
     document.getElementById(id).value = '';
   });
   document.getElementById('timezone').value = ''; 
   document.getElementById('experience').value = '';
   document.querySelectorAll('.rank-btn').forEach(b => b.classList.remove('active'));
+  
+  // ล้างข้อมูลพรีวิวรูปภาพ
+  base64ImageData = "";
+  document.getElementById('imagePreview').style.display = 'none';
+  document.getElementById('imagePreview').src = "";
+  document.getElementById('uploadStatusText').textContent = '⬡ คลิกที่นี่เพื่อเลือกอัปโหลดรูปภาพประวัติ/ยศ (PNG, JPG)';
+
   selectedUnitId = null; 
   document.getElementById('selectedUnit').value = ''; 
   document.getElementById('selectedWebhook').value = '';
