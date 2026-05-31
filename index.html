@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ระบบสมัครเข้าหน่วยทหาร ROBLOX</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sarabun:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
 <style>
   :root {
     --bg: #0a0c0a;
@@ -36,7 +40,6 @@
     overflow-x: hidden;
   }
 
-  /* Scanline overlay */
   body::before {
     content: '';
     position: fixed; inset: 0;
@@ -49,7 +52,6 @@
     z-index: 9999;
   }
 
-  /* Grid background */
   body::after {
     content: '';
     position: fixed; inset: 0;
@@ -61,7 +63,6 @@
     z-index: 0;
   }
 
-  /* ==================== HEADER ==================== */
   header {
     position: relative;
     border-bottom: 1px solid var(--border);
@@ -161,7 +162,6 @@
     background: rgba(255,193,7,0.05);
   }
 
-  /* ==================== MAIN LAYOUT ==================== */
   main {
     position: relative;
     z-index: 1;
@@ -170,7 +170,6 @@
     padding: 2rem;
   }
 
-  /* ==================== TICKER ==================== */
   .ticker-wrap {
     border: 1px solid var(--border);
     background: var(--panel);
@@ -196,7 +195,6 @@
 
   .ticker span { color: var(--green); }
 
-  /* ==================== SECTION TITLE ==================== */
   .section-label {
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.65rem;
@@ -224,7 +222,6 @@
     background: linear-gradient(90deg, var(--border-bright), transparent);
   }
 
-  /* ==================== UNITS GRID ==================== */
   .units-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -310,7 +307,6 @@
     letter-spacing: 2px;
   }
 
-  /* ==================== FORM ==================== */
   .form-panel {
     border: 1px solid var(--border);
     background: var(--panel);
@@ -394,7 +390,6 @@
     margin-top: 0.15rem;
   }
 
-  /* Rank selector */
   .rank-options {
     display: flex;
     gap: 0.5rem;
@@ -416,7 +411,6 @@
   .rank-btn:hover { border-color: var(--border-bright); color: var(--text); }
   .rank-btn.active { border-color: var(--green); color: var(--green); background: rgba(76,175,80,0.1); }
 
-  /* ==================== SUBMIT BUTTON ==================== */
   .btn-submit {
     display: flex;
     align-items: center;
@@ -449,7 +443,6 @@
   .btn-submit:hover { background: #388e3c; filter: brightness(1.1); }
   .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  /* ==================== TOAST / ALERT ==================== */
   #toast {
     position: fixed;
     bottom: 2rem; right: 2rem;
@@ -468,7 +461,6 @@
   #toast.success { border-color: var(--green); background: rgba(0,30,0,0.95); color: var(--green-bright); }
   #toast.error { border-color: var(--red); background: rgba(30,0,0,0.95); color: #ff7979; }
 
-  /* ==================== MODAL ==================== */
   .modal-overlay {
     display: none;
     position: fixed; inset: 0;
@@ -512,7 +504,6 @@
 
   .modal-close:hover { color: var(--red); }
 
-  /* Admin panel styles */
   .admin-unit-list { display: flex; flex-direction: column; gap: 0.8rem; margin: 1rem 0; }
 
   .admin-unit-item {
@@ -557,7 +548,6 @@
   .btn-icon.del:hover { border-color: var(--red); color: var(--red); }
   .btn-icon.edit:hover { border-color: var(--amber); color: var(--amber); }
 
-  /* Add unit form */
   .add-form { display: flex; flex-direction: column; gap: 0.8rem; }
 
   .add-form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
@@ -593,18 +583,15 @@
 
   .form-row-btns { display: flex; gap: 0.8rem; flex-wrap: wrap; }
 
-  /* Password modal */
   .pw-form { display: flex; gap: 0.8rem; margin-top: 1rem; }
   .pw-form input { flex: 1; }
 
-  /* ==================== SEPARATOR ==================== */
   .sep {
     border: none;
     border-top: 1px solid var(--border);
     margin: 1rem 0;
   }
 
-  /* ==================== FOOTER ==================== */
   footer {
     border-top: 1px solid var(--border);
     padding: 1.5rem 2rem;
@@ -618,7 +605,6 @@
     margin-top: 2rem;
   }
 
-  /* ==================== LOADING SPINNER ==================== */
   .spinner {
     display: inline-block;
     width: 16px; height: 16px;
@@ -631,7 +617,6 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ==================== RESPONSIVE ==================== */
   @media (max-width: 640px) {
     .form-grid { grid-template-columns: 1fr; }
     .form-group.full { grid-column: 1; }
@@ -639,11 +624,9 @@
     .add-form .row { grid-template-columns: 1fr; }
   }
 
-  /* Blink animation */
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   .fade-in { animation: fadeIn .3s ease forwards; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* Warning badge */
   .badge {
     display: inline-block;
     padding: 0.15rem 0.5rem;
@@ -657,18 +640,6 @@
   .badge.open { border-color: var(--green); color: var(--green); }
   .badge.full { border-color: var(--red); color: var(--red); }
   .badge.limited { border-color: var(--amber); color: var(--amber); }
-
-  /* Webhook warning */
-  .webhook-note {
-    background: rgba(255,193,7,0.07);
-    border: 1px solid rgba(255,193,7,0.25);
-    padding: 0.8rem 1rem;
-    font-size: 0.8rem;
-    color: var(--amber);
-    margin-top: 0.5rem;
-    font-family: 'Share Tech Mono', monospace;
-    line-height: 1.5;
-  }
 
   .sep-label {
     display: flex;
@@ -705,94 +676,78 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="header-inner">
     <div class="logo-block">
       <div class="logo-hex">⚔️</div>
       <div class="logo-text">
         <h1>ROBLOX MILITARY</h1>
-        <p>RECRUITMENT DIVISION — CLASSIFIED SYSTEM v2.4</p>
+        <p>RECRUITMENT DIVISION — CLASSIFIED SYSTEM v2.5</p>
       </div>
     </div>
     <div class="header-status">
-      <div class="status-dot"><span class="dot"></span> SYSTEM ONLINE</div>
+      <div class="status-dot"><span class="dot"></span> SECURE NETWORK</div>
       <div class="status-dot" id="unitCountBadge">UNITS: 0</div>
       <button class="btn-admin" onclick="openAdminLogin()">⚙ ADMIN</button>
     </div>
   </div>
 </header>
 
-<!-- TICKER -->
 <div style="position:relative;z-index:1;">
   <div class="ticker-wrap">
     <div class="ticker" id="tickerContent">
       <span>★</span> ระบบรับสมัครสมาชิกเข้าหน่วยทหาร ROBLOX &nbsp;&nbsp;
-      <span>★</span> กรอกข้อมูลให้ครบถ้วนและถูกต้อง &nbsp;&nbsp;
+      <span>★</span> ข้อมูลซิงก์เรียลไทม์ร่วมกันทุกคน &nbsp;&nbsp;
       <span>★</span> ผลการพิจารณาจะแจ้งผ่าน Discord &nbsp;&nbsp;
       <span>★</span> ห้ามสมัครซ้ำหลายหน่วยงาน &nbsp;&nbsp;
-      <span>★</span> ROBLOX MILITARY RECRUITMENT SYSTEM ACTIVE &nbsp;&nbsp;
-      <span>★</span> ระบบรับสมัครสมาชิกเข้าหน่วยทหาร ROBLOX &nbsp;&nbsp;
-      <span>★</span> กรอกข้อมูลให้ครบถ้วนและถูกต้อง &nbsp;&nbsp;
-      <span>★</span> ผลการพิจารณาจะแจ้งผ่าน Discord &nbsp;&nbsp;
-      <span>★</span> ห้ามสมัครซ้ำหลายหน่วยงาน &nbsp;&nbsp;
-      <span>★</span> ROBLOX MILITARY RECRUITMENT SYSTEM ACTIVE &nbsp;&nbsp;
+      <span>★</span> FIRESBASE CLOUD SECURITY DATABASE CONNECTED &nbsp;&nbsp;
     </div>
   </div>
 </div>
 
-<!-- MAIN -->
 <main>
 
-  <!-- UNIT SELECTION -->
   <div class="section-label">// STEP 1</div>
   <div class="section-title">เลือกหน่วยงาน <span class="counter-badge" id="unitCount">0 หน่วย</span></div>
 
   <div class="units-grid" id="unitsGrid">
     <div class="no-units" id="noUnitsMsg">
-      ⬡ ยังไม่มีหน่วยงาน — กรุณาติดต่อแอดมินเพื่อเพิ่มหน่วยงาน
+      ⬡ กำลังโหลดหน่วยงานทหารเรียลไทม์...
     </div>
   </div>
 
-  <!-- APPLICATION FORM -->
   <div class="section-label">// STEP 2</div>
   <div class="section-title">กรอกใบสมัคร</div>
 
   <div class="form-panel">
     <div class="form-grid">
 
-      <!-- Roblox Username -->
       <div class="form-group">
         <label>Roblox Username <span class="req">*</span></label>
         <input type="text" id="robloxUser" placeholder="เช่น xXWarriorXx" maxlength="20">
-        <span class="field-hint">ชื่อ Username ใน Roblox (ห้ามใช้ชื่อจริง)</span>
+        <span class="field-hint">ชื่อที่ใช้ในเกม Roblox (ห้ามระบุชื่อจริงเด็ดขาด)</span>
       </div>
 
-      <!-- Roblox ID -->
       <div class="form-group">
         <label>Roblox User ID <span class="req">*</span></label>
         <input type="number" id="robloxId" placeholder="เช่น 123456789" min="1">
-        <span class="field-hint">ดูได้จากหน้าโปรไฟล์ Roblox</span>
+        <span class="field-hint">ตัวเลข ID ดูได้จาก Link บนหน้าโปรไฟล์ของคุณ</span>
       </div>
 
-      <!-- Discord -->
       <div class="form-group">
         <label>Discord Username <span class="req">*</span></label>
         <input type="text" id="discordUser" placeholder="เช่น warrior#1234 หรือ warrior">
-        <span class="field-hint">สำหรับติดต่อกลับและแจ้งผลสมัคร</span>
+        <span class="field-hint">สำหรับแอดมินใช้ดึงตัวเข้ากลุ่มหรือติดต่อไป</span>
       </div>
 
-      <!-- Age -->
       <div class="form-group">
         <label>อายุ <span class="req">*</span></label>
         <input type="number" id="age" placeholder="เช่น 16" min="1" max="99">
       </div>
 
-      <!-- Unit (hidden, set by card click) -->
       <input type="hidden" id="selectedUnit">
       <input type="hidden" id="selectedWebhook">
 
-      <!-- Timezone -->
       <div class="form-group">
         <label>โซนเวลา / Timezone</label>
         <select id="timezone">
@@ -801,18 +756,14 @@
           <option value="SGT (GMT+8)">SGT (GMT+8) — สิงคโปร์</option>
           <option value="JST (GMT+9)">JST (GMT+9) — ญี่ปุ่น</option>
           <option value="UTC (GMT+0)">UTC (GMT+0)</option>
-          <option value="EST (GMT-5)">EST (GMT-5)</option>
-          <option value="PST (GMT-8)">PST (GMT-8)</option>
         </select>
       </div>
 
-      <!-- Online Time -->
       <div class="form-group">
-        <label>ช่วงเวลาที่ออนไลน์</label>
-        <input type="text" id="onlineTime" placeholder="เช่น 18:00 – 23:00">
+        <label>ช่วงเวลาที่สะดวกออนไลน์</label>
+        <input type="text" id="onlineTime" placeholder="เช่น 17:00 – 22:00">
       </div>
 
-      <!-- Experience -->
       <div class="form-group full">
         <label>ประสบการณ์ทหาร ROBLOX <span class="req">*</span></label>
         <div class="rank-options" id="expOptions">
@@ -820,27 +771,25 @@
           <button class="rank-btn" onclick="selectExp(this,'มีประสบการณ์น้อย (< 1 ปี)')">น้อยกว่า 1 ปี</button>
           <button class="rank-btn" onclick="selectExp(this,'มีประสบการณ์ปานกลาง (1-2 ปี)')">1–2 ปี</button>
           <button class="rank-btn" onclick="selectExp(this,'มีประสบการณ์มาก (2+ ปี)')">2+ ปี</button>
-          <button class="rank-btn" onclick="selectExp(this,'ผ่านการรบจริงหลายครั้ง')">ผ่านการรบ</button>
+          <button class="rank-btn" onclick="selectExp(this,'ผ่านการรบจริงหลายครั้ง')">ผ่านสมรภูมิรบ</button>
         </div>
         <input type="hidden" id="experience">
       </div>
 
-      <!-- Reason -->
       <div class="form-group full">
-        <label>เหตุผลที่ต้องการสมัคร <span class="req">*</span></label>
-        <textarea id="reason" rows="4" placeholder="บอกเล่าว่าทำไมคุณถึงต้องการเข้าร่วมหน่วยนี้ คุณมีทักษะอะไร และจะมีส่วนช่วยหน่วยงานอย่างไร..."></textarea>
+        <label>เหตุผลที่ต้องการเข้าร่วมหน่วยนี้ <span class="req">*</span></label>
+        <textarea id="reason" rows="4" placeholder="โปรระบุเหตุผลและเป้าหมายของคุณเมื่อได้เข้าหน่วยนี้แล้ว..."></textarea>
       </div>
 
-      <!-- Previous Unit -->
       <div class="form-group full">
-        <label>หน่วยงานเดิม (ถ้ามี)</label>
-        <input type="text" id="prevUnit" placeholder="ชื่อหน่วยงานเดิมที่เคยอยู่ หรือ — ถ้าไม่มี">
+        <label>หน่วยงานเดิมที่เคยสังกัด (ถ้ามี)</label>
+        <input type="text" id="prevUnit" placeholder="ชื่อกองทัพเดิม หรือพิมพ์ — หากไม่มี">
       </div>
 
     </div>
 
     <button class="btn-submit" id="submitBtn" onclick="submitApplication()">
-      <span id="submitText">ส่งใบสมัคร</span>
+      <span id="submitText">ส่งเอกสารใบสมัคร</span>
       <span style="letter-spacing:1px">→</span>
     </button>
   </div>
@@ -848,145 +797,138 @@
 </main>
 
 <footer>
-  ROBLOX MILITARY RECRUITMENT SYSTEM &nbsp;|&nbsp; ALL DATA TRANSMITTED VIA SECURE WEBHOOK &nbsp;|&nbsp;
-  UNAUTHORIZED ACCESS PROHIBITED
+  MILITARY DATABASE MANAGEMENT SYSTEM &nbsp;|&nbsp; CONNECTED TO CLOUD CONFIG &nbsp;|&nbsp; ALL RIGHTS RESERVED
 </footer>
 
-<!-- ==================== TOAST ==================== -->
 <div id="toast"></div>
 
-<!-- ==================== ADMIN LOGIN MODAL ==================== -->
 <div class="modal-overlay" id="adminLoginModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('adminLoginModal')">✕</button>
-    <div class="modal-title">🔐 ADMIN ACCESS</div>
+    <div class="modal-title">🔐 ADMIN AUTHENTICATION</div>
     <p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:1rem;">
-      กรอกรหัสผ่านเพื่อเข้าสู่ระบบแอดมิน<br>
-      <span style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--amber);"> — เปลี่ยนได้ในแผง Admin</span>
+      กรุณากรอกรหัสผ่านเพื่อสิทธิ์แอดมินในการ จัดการหน่วยงาน (ซิงก์ข้อมูลไปที่ทุกคน)<br>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--amber);">⚠ ตั้งรหัสผ่านของคุณในตัวแปรโค้ดระบบ หรือตรงกับ Firebase Rules</span>
     </p>
     <div class="pw-form">
-      <input type="password" id="adminPwInput" placeholder="รหัสผ่าน" onkeypress="if(event.key==='Enter')checkAdminPw()">
-      <button class="btn-add" onclick="checkAdminPw()">เข้าสู่ระบบ</button>
+      <input type="password" id="adminPwInput" placeholder="กรอกรหัสผ่านแอดมิน" onkeypress="if(event.key==='Enter')checkAdminPw()">
+      <button class="btn-add" onclick="checkAdminPw()">ยืนยัน</button>
     </div>
   </div>
 </div>
 
-<!-- ==================== ADMIN PANEL MODAL ==================== -->
 <div class="modal-overlay" id="adminModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
-    <div class="modal-title">⚙ ADMIN PANEL</div>
+    <div class="modal-title">⚙ CENTRAL CONTROL PANEL</div>
 
-    <!-- Change password -->
-    <details style="margin-bottom:1rem;">
-      <summary style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--text-dim);cursor:pointer;letter-spacing:2px;">▸ เปลี่ยนรหัสผ่านแอดมิน</summary>
-      <div style="margin-top:0.8rem;display:flex;gap:0.6rem;flex-wrap:wrap;">
-        <input type="password" id="newPw1" placeholder="รหัสผ่านใหม่" style="flex:1;min-width:120px;">
-        <input type="password" id="newPw2" placeholder="ยืนยันรหัสผ่าน" style="flex:1;min-width:120px;">
-        <button class="btn-add" onclick="changePw()">บันทึก</button>
-      </div>
-    </details>
-
-    <hr class="sep">
-
-    <!-- Unit list -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:2px;color:var(--text-dim);">หน่วยงานที่มีอยู่</div>
+    <div style="display:flex;align-items:center;justify-content:between;margin-bottom:0.8rem;">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:2px;color:var(--text-dim);">รายชื่อหน่วยงานในเซิร์ฟเวอร์หลัก (เรียลไทม์)</div>
     </div>
 
     <div class="admin-unit-list" id="adminUnitList"></div>
 
-    <div class="sep-label"><span>เพิ่ม / แก้ไขหน่วยงาน</span></div>
+    <div class="sep-label"><span>จัดการและแก้ไขข้อมูลหน่วย</span></div>
 
-    <!-- Add/Edit form -->
     <div class="add-form">
       <input type="hidden" id="editUnitId">
       <div class="row">
         <div class="form-group">
-          <label>ชื่อหน่วยงาน <span class="req">*</span></label>
-          <input type="text" id="newUnitName" placeholder="เช่น กรม 1 ทหารราบ">
+          <label>ชื่อหน่วยทหาร <span class="req">*</span></label>
+          <input type="text" id="newUnitName" placeholder="เช่น กรมทหารราบที่ 1">
         </div>
         <div class="form-group">
-          <label>TAG / รหัสย่อ</label>
+          <label>รหัสย่อ (TAG)</label>
           <input type="text" id="newUnitTag" placeholder="เช่น INF-01" maxlength="12">
         </div>
       </div>
       <div class="form-group">
-        <label>คำอธิบายหน่วยงาน</label>
-        <input type="text" id="newUnitDesc" placeholder="เช่น หน่วยทหารราบโจมตีระยะประชิด">
+        <label>คำอธิบายภารกิจหน่วย</label>
+        <input type="text" id="newUnitDesc" placeholder="เช่น ปฏิบัติการจู่โจมและลาดตระเวนทางอากาศ">
       </div>
       <div class="form-group">
         <label>Discord Webhook URL <span class="req">*</span></label>
         <input type="url" id="newUnitWebhook" placeholder="https://discord.com/api/webhooks/...">
-        <div class="webhook-note">
-          ⚠ วาง Webhook URL ของ Discord ช่องที่ต้องการรับใบสมัครของหน่วยนี้<br>
-          วิธีสร้าง: Discord Server → Edit Channel → Integrations → Webhooks
-        </div>
       </div>
       <div class="form-group">
-        <label>จำนวนที่รับ (ที่นั่ง)</label>
-        <input type="text" id="newUnitSlots" placeholder="เช่น เปิดรับ 10 อัตรา หรือ ไม่จำกัด">
+        <label>อัตราที่เปิดรับสมัคร</label>
+        <input type="text" id="newUnitSlots" placeholder="เช่น รับ 5 นาย หรือ เปิดรับไม่จำกัด">
       </div>
       <div class="form-group">
-        <label>สถานะการรับสมัคร</label>
+        <label>สถานะประตูกองทัพ</label>
         <select id="newUnitStatus">
-          <option value="open">🟢 เปิดรับสมัคร</option>
-          <option value="limited">🟡 รับจำกัด</option>
-          <option value="full">🔴 ปิดรับสมัคร</option>
+          <option value="open">🟢 OPEN — เปิดรับสมัครปกติ</option>
+          <option value="limited">🟡 LIMITED — ใกล้เต็มแล้ว</option>
+          <option value="full">🔴 FULL — ปิดรับสมัครชั่วคราว</option>
         </select>
       </div>
       <div class="form-row-btns">
-        <button class="btn-add" onclick="saveUnit()">💾 บันทึกหน่วยงาน</button>
-        <button class="btn-cancel" onclick="clearUnitForm()">ล้างแบบฟอร์ม</button>
+        <button class="btn-add" onclick="saveUnit()">💾 บันทึกและซิงก์ข้อมูล</button>
+        <button class="btn-cancel" onclick="clearUnitForm()">ล้างข้อมูลฟอร์ม</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ==================== SCRIPT ==================== -->
 <script>
-// ======== DATA STORAGE ========
-const STORAGE_UNITS = 'rmr_units';
-const STORAGE_PW    = 'rmr_admin_pw';
-const DEFAULT_PW    = 'YOK12434278';
-const STORAGE_ADMINS='rmr_admins';
-const STORAGE_APPS='rmr_apps';
+// ======== สัญญาณเชื่อมต่อฐานข้อมูล FIREBASE CONFIG ========
+const firebaseConfig = {
+  apiKey: "AIzaSyD8cZVvAvmUmpXIsWvcx6bwfZy_L7p4f3M",
+  authDomain: "registered-4b7de.firebaseapp.com",
+  databaseURL: "https://registered-4b7de-default-rtdb.firebaseio.com",
+  projectId: "registered-4b7de",
+  storageBucket: "registered-4b7de.firebasestorage.app",
+  messagingSenderId: "342078506670",
+  appId: "1:342078506670:web:bd12e8b10475677668cf3f",
+  measurementId: "G-1YLDWV8L6S"
+};
 
-function getUnits() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_UNITS)) || []; }
-  catch { return []; }
-}
+// เริ่มต้นระบบ Cloud
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-function saveUnits(units) {
-  localStorage.setItem(STORAGE_UNITS, JSON.stringify(units));
-}
-
-function getAdminPw() {
-  return localStorage.getItem(STORAGE_PW) || DEFAULT_PW;
-}
-
-// ======== RENDER UNITS ========
+// ตัวแปรส่วนกลาง
+let globalUnits = [];
 let selectedUnitId = null;
+let currentAdminPassword = ""; 
 
+// รหัสผ่านสำหรับแผงควบคุมหน้าเว็บ (กรุณาตั้งค่าความปลอดภัยให้ตรงกับ Firebase Rules ของคุณ)
+const WEB_ADMIN_PASSWORD = "admin1234";
+
+// ดึงและคอยจับตาดูการอัปเดตข้อมูลแบบ Realtime จาก Firebase 
+db.ref('rmr_data/units').on('value', (snapshot) => {
+  const data = snapshot.val();
+  globalUnits = [];
+  if (data) {
+    Object.keys(data).forEach(key => {
+      globalUnits.push({ id: key, ...data[key] });
+    });
+  }
+  renderUnits();
+  if (document.getElementById('adminModal').classList.contains('open')) {
+    renderAdminPanel();
+  }
+}, (error) => {
+  console.error("Firebase fetch failed: ", error);
+  showToast('❌ ไม่สามารถอ่านฐานข้อมูลสำเร็จ กรุณาเช็กสิทธิ์หน้า Rules', 'error');
+});
+
+// ========ฟังก์ชันแสดงผลหน่วยงานหน้าแรก (สำหรับทุกคน) ========
 function renderUnits() {
-  const units = getUnits();
   const grid  = document.getElementById('unitsGrid');
   const count = document.getElementById('unitCount');
   const badge = document.getElementById('unitCountBadge');
-  const noMsg = document.getElementById('noUnitsMsg');
 
-  count.textContent = units.length + ' หน่วย';
-  badge.textContent = 'UNITS: ' + units.length;
-
-  // Clear
+  count.textContent = globalUnits.length + ' หน่วย';
+  badge.textContent = 'UNITS: ' + globalUnits.length;
   grid.innerHTML = '';
 
-  if (units.length === 0) {
-    grid.innerHTML = '<div class="no-units" id="noUnitsMsg">⬡ ยังไม่มีหน่วยงาน — กรุณาติดต่อแอดมินเพื่อเพิ่มหน่วยงาน</div>';
+  if (globalUnits.length === 0) {
+    grid.innerHTML = '<div class="no-units" id="noUnitsMsg">⬡ ขณะนี้ยังไม่มีหน่วยงานใด ๆ ในระบบฐานข้อมูลหลัก</div>';
     return;
   }
 
-  units.forEach(unit => {
+  globalUnits.forEach(unit => {
     const statusMap = {
       open:    '<span class="badge open">OPEN</span>',
       limited: '<span class="badge limited">LIMITED</span>',
@@ -999,10 +941,10 @@ function renderUnits() {
     card.onclick = () => selectUnit(unit.id);
 
     card.innerHTML = `
-      <span class="unit-tag">${escHtml(unit.tag || 'UNIT')}</span>
+      <span class="unit-tag">${escHtml(unit.tag || 'MILITARY')}</span>
       <div class="unit-name">${escHtml(unit.name)} ${statusMap[unit.status] || statusMap.open}</div>
       ${unit.desc ? `<div class="unit-desc">${escHtml(unit.desc)}</div>` : ''}
-      ${unit.slots ? `<div class="unit-slots">📋 ${escHtml(unit.slots)}</div>` : ''}
+      ${unit.slots ? `<div class="unit-slots">📋 อัตรา: ${escHtml(unit.slots)}</div>` : ''}
     `;
     grid.appendChild(card);
   });
@@ -1010,19 +952,22 @@ function renderUnits() {
 
 function selectUnit(id) {
   selectedUnitId = id;
-  const units = getUnits();
-  const unit  = units.find(u => u.id === id);
+  const unit = globalUnits.find(u => u.id === id);
   if (!unit) return;
+
+  if (unit.status === 'full') {
+    showToast('❌ ขออภัย! หน่วยงานนี้ปิดรับสมัครลงทะเบียนแล้ว', 'error');
+    return;
+  }
 
   document.getElementById('selectedUnit').value   = unit.name;
   document.getElementById('selectedWebhook').value = unit.webhook;
 
-  // Visual
   document.querySelectorAll('.unit-card').forEach(c => {
     c.classList.toggle('selected', c.dataset.id === id);
   });
 
-  showToast('✔ เลือกหน่วย: ' + unit.name, 'success');
+  showToast('✔ เลือกประจำการชั่วคราว: ' + unit.name, 'success');
 }
 
 function selectExp(btn, val) {
@@ -1031,7 +976,7 @@ function selectExp(btn, val) {
   document.getElementById('experience').value = val;
 }
 
-// ======== SUBMIT APPLICATION ========
+// ======== ฟังก์ชันยิงใบสมัครเข้า DISCORD WEBHOOK ========
 async function submitApplication() {
   const robloxUser  = document.getElementById('robloxUser').value.trim();
   const robloxId    = document.getElementById('robloxId').value.trim();
@@ -1045,40 +990,37 @@ async function submitApplication() {
   const onlineTime  = document.getElementById('onlineTime').value.trim();
   const prevUnit    = document.getElementById('prevUnit').value.trim();
 
-  // Validate
-  if (!unitName)    { showToast('❌ กรุณาเลือกหน่วยงานก่อน', 'error'); return; }
-  if (!robloxUser)  { showToast('❌ กรุณากรอก Roblox Username', 'error'); return; }
-  if (!robloxId)    { showToast('❌ กรุณากรอก Roblox User ID', 'error'); return; }
-  if (!discordUser) { showToast('❌ กรุณากรอก Discord Username', 'error'); return; }
-  if (!age)         { showToast('❌ กรุณากรอกอายุ', 'error'); return; }
-  if (!experience)  { showToast('❌ กรุณาเลือกระดับประสบการณ์', 'error'); return; }
-  if (!reason)      { showToast('❌ กรุณากรอกเหตุผลที่สมัคร', 'error'); return; }
-  if (!webhook)     { showToast('❌ หน่วยงานนี้ยังไม่มีการตั้งค่า Webhook — ติดต่อแอดมิน', 'error'); return; }
+  if (!unitName)    { showToast('❌ กรุณาเลือกคลิกเลือกหน่วยงานทหารในสเต็ปแรกก่อน', 'error'); return; }
+  if (!robloxUser)  { showToast('❌ กรุณาระบุชื่อบัญชี Roblox (Username)', 'error'); return; }
+  if (!robloxId)    { showToast('❌ กรุณาระบุรหัส Roblox ID', 'error'); return; }
+  if (!discordUser) { showToast('❌ กรุณากรอก Discord ของคุณให้ครบถ้วน', 'error'); return; }
+  if (!age)         { showToast('❌ กรุณาระบุอายุของคุณด้วยตัวเลข', 'error'); return; }
+  if (!experience)  { showToast('❌ กรุณาคลิกเลือกประสบการณ์ทำงานของคุณ', 'error'); return; }
+  if (!reason)      { showToast('❌ กรุณากรอกรายละเอียดเหตุผลที่ต้องการเข้าร่วม', 'error'); return; }
+  if (!webhook)     { showToast('❌ ตรวจพบข้อผิดพลาด: หน่วยงานนี้ไม่มี Webhook เชื่อมไว้', 'error'); return; }
 
-  // Disable button
   const btn  = document.getElementById('submitBtn');
   const text = document.getElementById('submitText');
   btn.disabled = true;
-  text.innerHTML = 'กำลังส่ง... <span class="spinner"></span>';
+  text.innerHTML = 'กำลังประมวลผลคำขอ... <span class="spinner"></span>';
 
-  // Build embed
   const now  = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' });
   const embed = {
-    title: '📋 ใบสมัครเข้าหน่วยทหาร',
+    title: '📋 ใบสมัครเข้าร่วมหน่วยงานทหาร (ส่วนกลาง)',
     color: 0x4caf50,
-    description: `**ผู้สมัครใหม่ได้ยื่นใบสมัครเข้า ${unitName}**`,
+    description: `**มีการส่งใบเสนอตัวสมัครเข้าร่วมสังกัด: ${unitName}**`,
     fields: [
       { name: '🎮 Roblox Username',  value: robloxUser,                      inline: true  },
       { name: '🆔 Roblox User ID',   value: robloxId,                        inline: true  },
-      { name: '💬 Discord',          value: discordUser,                      inline: true  },
-      { name: '🎂 อายุ',             value: age + ' ปี',                     inline: true  },
-      { name: '🕐 Timezone',         value: timezone || '—',                  inline: true  },
-      { name: '⏰ เวลาออนไลน์',      value: onlineTime || '—',               inline: true  },
-      { name: '⚔️ ประสบการณ์',       value: experience,                       inline: false },
-      { name: '🏛 หน่วยงานเดิม',      value: prevUnit || '— ไม่มี —',        inline: false },
-      { name: '📝 เหตุผลที่สมัคร',   value: reason.substring(0, 1000),       inline: false },
+      { name: '💬 Discord Contact',  value: discordUser,                      inline: true  },
+      { name: '🎂 อายุผู้สมัคร',        value: age + ' ปี',                     inline: true  },
+      { name: '🕐 โซนเวลาผู้เล่น',       value: timezone || '—',                  inline: true  },
+      { name: '⏰ ช่วงเวลาออนไลน์',     value: onlineTime || '—',               inline: true  },
+      { name: '⚔️ ระดับประสบการณ์',     value: experience,                       inline: false },
+      { name: '🏛 ค่าย/กองทัพเดิม',     value: prevUnit || '— ไม่เคยมีประวัติ —',  inline: false },
+      { name: '📝 เหตุผลหลักที่สมัคร',   value: reason.substring(0, 1000),       inline: false },
     ],
-    footer: { text: `ส่งเมื่อ ${now} | ROBLOX Military Recruitment System` },
+    footer: { text: `ระบบส่งข้อมูลเมื่อ ${now} | SECURE HUB SYSTEM` },
     thumbnail: { url: 'https://tr.rbxcdn.com/53eb9b17fe1432a809c73a13889b5006/420/420/Image/Png' }
   };
 
@@ -1086,22 +1028,21 @@ async function submitApplication() {
     const res = await fetch(webhook, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: 'Recruitment Bot', embeds: [embed] })
+      body: JSON.stringify({ username: 'Recruitment Automated Server', embeds: [embed] })
     });
 
     if (res.ok || res.status === 204) {
-      showToast('✅ ส่งใบสมัครสำเร็จ! รอแอดมินตรวจสอบและแจ้งผลทาง Discord', 'success');
+      showToast('✅ ยื่นเอกสารเรียบร้อย! โปรดติดตามความคืบหน้าที่ Discord', 'success');
       clearForm();
     } else {
-      const errText = await res.text().catch(() => '');
-      throw new Error('HTTP ' + res.status + ' ' + errText);
+      throw new Error('สถานะตอบรับ ' + res.status);
     }
   } catch (err) {
     console.error(err);
-    showToast('❌ ส่งไม่สำเร็จ: ' + (err.message || 'เกิดข้อผิดพลาด') + ' — ตรวจสอบ Webhook URL', 'error');
+    showToast('❌ ส่งใบสมัครไม่สำเร็จ! ตรวจสอบความถูกต้องของลิงก์ Webhook ของหน่วยงาน', 'error');
   } finally {
     btn.disabled = false;
-    text.textContent = 'ส่งใบสมัคร';
+    text.textContent = 'ส่งเอกสารใบสมัคร';
   }
 }
 
@@ -1118,7 +1059,7 @@ function clearForm() {
   document.querySelectorAll('.unit-card').forEach(c => c.classList.remove('selected'));
 }
 
-// ======== ADMIN ========
+// ======== ส่วนงานของแอดมิน (จัดการเรียลไทม์ผ่าน FIREBASE) ========
 function openAdminLogin() {
   document.getElementById('adminPwInput').value = '';
   openModal('adminLoginModal');
@@ -1127,39 +1068,27 @@ function openAdminLogin() {
 
 function checkAdminPw() {
   const pw = document.getElementById('adminPwInput').value;
-  if (pw === getAdminPw()) {
+  if (pw === WEB_ADMIN_PASSWORD) {
+    currentAdminPassword = pw; // บันทึกรหัสผ่านไว้ส่งไปพร้อมสิทธิ์เขียนข้อมูล
     closeModal('adminLoginModal');
     renderAdminPanel();
     openModal('adminModal');
   } else {
-    showToast('❌ รหัสผ่านไม่ถูกต้อง', 'error');
+    showToast('❌ รหัสผ่านตรวจสอบระบบไม่ถูกต้อง', 'error');
     document.getElementById('adminPwInput').value = '';
   }
 }
 
-function changePw() {
-  const p1 = document.getElementById('newPw1').value;
-  const p2 = document.getElementById('newPw2').value;
-  if (!p1) { showToast('❌ กรุณากรอกรหัสผ่านใหม่', 'error'); return; }
-  if (p1 !== p2) { showToast('❌ รหัสผ่านไม่ตรงกัน', 'error'); return; }
-  if (p1.length < 6) { showToast('❌ รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร', 'error'); return; }
-  localStorage.setItem(STORAGE_PW, p1);
-  document.getElementById('newPw1').value = '';
-  document.getElementById('newPw2').value = '';
-  showToast('✅ เปลี่ยนรหัสผ่านสำเร็จ', 'success');
-}
-
 function renderAdminPanel() {
-  const units = getUnits();
   const list  = document.getElementById('adminUnitList');
   list.innerHTML = '';
 
-  if (units.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:\'Share Tech Mono\',monospace;font-size:0.75rem;color:var(--text-dim);">ยังไม่มีหน่วยงาน — เพิ่มด้านล่าง</div>';
+  if (globalUnits.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:1.5rem;font-family:\'Share Tech Mono\',monospace;font-size:0.75rem;color:var(--text-dim);">ขณะนี้ฐานข้อมูลว่างเปล่า กรุณาเพิ่มข้อมูลใหม่ด้านล่าง</div>';
     return;
   }
 
-  units.forEach((unit, idx) => {
+  globalUnits.forEach((unit) => {
     const statusLabel = { open: '🟢', limited: '🟡', full: '🔴' }[unit.status] || '🟢';
     const div = document.createElement('div');
     div.className = 'admin-unit-item fade-in';
@@ -1169,18 +1098,19 @@ function renderAdminPanel() {
         <div class="admin-unit-webhook">${escHtml(maskWebhook(unit.webhook))}</div>
       </div>
       <button class="btn-icon edit" title="แก้ไข" onclick="editUnit('${unit.id}')">✏</button>
-      <button class="btn-icon del"  title="ลบ"   onclick="deleteUnit('${unit.id}')">🗑</button>
+      <button class="btn-icon del"  title="ลบออก"   onclick="deleteUnit('${unit.id}')">🗑</button>
     `;
     list.appendChild(div);
   });
 }
 
 function maskWebhook(url) {
-  if (!url) return '(ไม่มี Webhook)';
+  if (!url) return '(ไม่พบ Webhook)';
   if (url.length <= 40) return url;
   return url.substring(0, 40) + '••••••••••' + url.slice(-8);
 }
 
+// ฟังก์ชันเพิ่มหรือแก้ไขข้อมูล โดยจะส่งพาสเวิร์ดแนบจุดเช็กสิทธิ์ความปลอดภัยไปด้วย
 function saveUnit() {
   const id      = document.getElementById('editUnitId').value;
   const name    = document.getElementById('newUnitName').value.trim();
@@ -1190,35 +1120,52 @@ function saveUnit() {
   const slots   = document.getElementById('newUnitSlots').value.trim();
   const status  = document.getElementById('newUnitStatus').value;
 
-  if (!name)    { showToast('❌ กรุณากรอกชื่อหน่วยงาน', 'error'); return; }
-  if (!webhook) { showToast('❌ กรุณากรอก Webhook URL', 'error'); return; }
+  if (!name)    { showToast('❌ โปรดกรอกข้อมูลชื่อหน่วยงานทหาร', 'error'); return; }
+  if (!webhook) { showToast('❌ โปรดใส่ลิงก์เชื่อมต่อ Discord Webhook URL', 'error'); return; }
+  
   if (!webhook.startsWith('https://discord.com/api/webhooks/') && !webhook.startsWith('https://discordapp.com/api/webhooks/')) {
-    showToast('⚠ Webhook URL ดูไม่ถูกต้อง — ตรวจสอบอีกครั้ง', 'error'); return;
+    showToast('⚠ รูปแบบเว็บฮุกของดิสคอร์ดไม่ถูกต้อง', 'error'); return;
   }
 
-  const units = getUnits();
+  // เตรียมโครงสร้างข้อมูลแนบข้อมูลหลักร่วมกับรหัสผ่านลับส่งไปตรวจสอบในคราวเดียว
+  const unitData = { name, tag, desc, webhook, slots, status };
 
   if (id) {
-    // Edit existing
-    const idx = units.findIndex(u => u.id === id);
-    if (idx !== -1) {
-      units[idx] = { ...units[idx], name, tag, desc, webhook, slots, status };
-    }
-  } else {
-    // Add new
-    units.push({ id: Date.now().toString(), name, tag, desc, webhook, slots, status });
-  }
+    // ส่งข้อมูลแบบ Multi-Path Update เพื่อเซ็ตคีย์รักษาความปลอดภัย
+    const updates = {};
+    updates['/units/' + id] = unitData;
+    updates['/admin_auth_key'] = currentAdminPassword; // พ่วงรหัสผ่านสำหรับ Firebase Rules ตรวจสอบ
 
-  saveUnits(units);
-  clearUnitForm();
-  renderAdminPanel();
-  renderUnits();
-  showToast('✅ บันทึกหน่วยงานสำเร็จ', 'success');
+    db.ref('rmr_data').update(updates)
+      .then(() => {
+        showToast('✅ อัปเดตการแก้ไขซิงก์ข้อมูลสำเร็จ', 'success');
+        clearUnitForm();
+      })
+      .catch((err) => {
+        console.error(err);
+        showToast('❌ ปฏิเสธการเขียน: รหัสแอดมินหรือความปลอดภัย Rules ไม่ถูกต้อง', 'error');
+      });
+  } else {
+    // กรณีสร้างหน่วยงานใหม่
+    const newPostKey = db.ref('rmr_data/units').push().key;
+    const updates = {};
+    updates['/units/' + newPostKey] = unitData;
+    updates['/admin_auth_key'] = currentAdminPassword;
+
+    db.ref('rmr_data').update(updates)
+      .then(() => {
+        showToast('✅ ซิงก์สร้างหน่วยงานใหม่เรียบร้อย', 'success');
+        clearUnitForm();
+      })
+      .catch((err) => {
+        console.error(err);
+        showToast('❌ ปฏิเสธการบันทึก: ตรวจสอบความปลอดภัย Firebase Rules ล้มเหลว', 'error');
+      });
+  }
 }
 
 function editUnit(id) {
-  const units = getUnits();
-  const unit  = units.find(u => u.id === id);
+  const unit = globalUnits.find(u => u.id === id);
   if (!unit) return;
   document.getElementById('editUnitId').value    = unit.id;
   document.getElementById('newUnitName').value   = unit.name;
@@ -1231,18 +1178,27 @@ function editUnit(id) {
   document.getElementById('newUnitName').focus();
 }
 
+// ฟังก์ชันขอลบข้อมูลบน Realtime Database
 function deleteUnit(id) {
-  if (!confirm('ต้องการลบหน่วยงานนี้?')) return;
-  const units = getUnits().filter(u => u.id !== id);
-  saveUnits(units);
-  if (selectedUnitId === id) {
-    selectedUnitId = null;
-    document.getElementById('selectedUnit').value = '';
-    document.getElementById('selectedWebhook').value = '';
-  }
-  renderAdminPanel();
-  renderUnits();
-  showToast('🗑 ลบหน่วยงานแล้ว', 'success');
+  if (!confirm('ยืนยันลบหน่วยงานนี้หรือไม่? ข้อมูลจะถูกถอดถอนและหายไปทันทีสำหรับผู้ใช้ทุกคน')) return;
+  
+  // ในขั้นตอนลบข้อมูล เราจะยิงรหัสผ่านสิทธิ์ยืนยันตัวตนแอดมินเข้าที่จุดตรวจสอบของโฟลเดอร์รักษาสิทธิ์ก่อนลบ
+  db.ref('rmr_data/admin_auth_key').set(currentAdminPassword)
+    .then(() => {
+      return db.ref('rmr_data/units/' + id).remove();
+    })
+    .then(() => {
+      if (selectedUnitId === id) {
+        selectedUnitId = null;
+        document.getElementById('selectedUnit').value = '';
+        document.getElementById('selectedWebhook').value = '';
+      }
+      showToast('🗑 ลบข้อมูลหน่วยงานออกจากคลาวด์แล้ว', 'success');
+    })
+    .catch((err) => {
+      console.error(err);
+      showToast('❌ ไม่สามารถทำรายการได้เนื่องจากปัญหาสิทธิ์ความปลอดภัย', 'error');
+    });
 }
 
 function clearUnitForm() {
@@ -1255,16 +1211,15 @@ function clearUnitForm() {
   document.getElementById('newUnitStatus').value = 'open';
 }
 
-// ======== MODAL HELPERS ========
+// ======== ช่วยเหลือเปิดปิดหน้าต่างโมดอล ========
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-// Close on overlay click
 document.querySelectorAll('.modal-overlay').forEach(el => {
   el.addEventListener('click', e => { if (e.target === el) closeModal(el.id); });
 });
 
-// ======== TOAST ========
+// ======== ระบบ TOAST POPUP ALERT ========
 let toastTimer;
 function showToast(msg, type = 'success') {
   const t = document.getElementById('toast');
@@ -1274,31 +1229,11 @@ function showToast(msg, type = 'success') {
   toastTimer = setTimeout(() => { t.className = type; }, 4000);
 }
 
-// ======== UTILS ========
+// ======== ตัวแปลงความปลอดภัยของตัวอักษร HTML ========
 function escHtml(str) {
   if (!str) return '';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
-// ======== INIT ========
-renderUnits();
 </script>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-import { getDatabase } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
-const firebaseConfig={
-apiKey:"AIzaSyD8cZVvAvmUmpXIsWvcx6bwfZy_L7p4f3M",
-authDomain:"registered-4b7de.firebaseapp.com",
-databaseURL:"https://registered-4b7de-default-rtdb.firebaseio.com",
-projectId:"registered-4b7de",
-storageBucket:"registered-4b7de.firebasestorage.app",
-messagingSenderId:"342078506670",
-appId:"1:342078506670:web:bd12e8b10475677668cf3f"
-};
-const app=initializeApp(firebaseConfig);
-window.firebaseDB=getDatabase(app);
-</script>
-
 </body>
 </html>
